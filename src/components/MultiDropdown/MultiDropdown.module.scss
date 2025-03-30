@@ -1,0 +1,26 @@
+@use 'scss' as *;
+
+.dropdown {
+  margin-top: $space-xxs;
+  width: 400px;
+  background-color: $dropdown-options-bg;
+  box-shadow: $dropdown-shadow;
+}
+
+.option {
+  padding: $space-s $space-xs;
+  font-size: 16px;
+  line-height: 20px;
+  height: 48px;
+  font-weight: 400;
+
+
+  &:hover {
+    cursor: pointer;
+    color: $text-secondary;
+  }
+}
+
+.optionActive {
+  color: $text-accent;
+}

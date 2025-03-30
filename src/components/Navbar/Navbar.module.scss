@@ -1,0 +1,207 @@
+@use "scss" as *;
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  height: 90px;
+  z-index: $navbar-z-index;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 100px;
+
+    @include desktop-s {
+      padding: 0 40px;
+    }
+
+    @include mobile {
+      padding: 0 20px;
+    }
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 48px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    @include desktop-s {
+      display: none;
+    }
+  }
+
+  .link {
+    font-size: 18px;
+    color: $text-primary;
+    text-decoration: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+    min-width: 105px;
+    padding: $space-xxs;
+    transition:
+      color 0.3s,
+      font-weight 0.3s;
+    font-weight: 400;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: $brand;
+      transition: width 0.3s;
+    }
+
+    &:hover::after,
+    &.linkActive::after {
+      width: 100%;
+    }
+
+    &:hover {
+      color: $brand;
+      font-weight: 500;
+    }
+
+    &.linkActive {
+      color: $brand;
+      font-weight: 700;
+    }
+  }
+
+  .icons {
+    display: flex;
+    gap: 24px;
+
+    @include desktop-s {
+      display: none;
+    }
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+
+    .iconSvg {
+      width: 100%;
+      height: 100%;
+      fill: #fff;
+      transition: fill 0.3s;
+    }
+
+    &:hover .iconSvg,
+    &.iconActive .iconSvg {
+      fill: $brand;
+    }
+  }
+
+  .burger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: $burger-z-index;
+
+    span {
+      width: 100%;
+      height: 2.2px;
+      background: #333;
+      transition: all 0.3s;
+    }
+
+    &.burgerOpen {
+      span:nth-child(1) {
+        transform: rotate(50deg) translate(6px, 6px);
+      }
+
+      span:nth-child(2) {
+        opacity: 0;
+      }
+
+      span:nth-child(3) {
+        transform: rotate(-50deg) translate(6px, -6px);
+      }
+    }
+
+    @include desktop-s {
+      display: flex;
+    }
+  }
+
+  .mobile {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    transition: all 0.3s;
+    visibility: hidden;
+    opacity: 0;
+    background-color: white;
+
+    &.mobileOpen {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @include desktop-s {
+      display: block;
+    }
+
+    .mobileLink {
+      display: block;
+      padding: 15px;
+      font-size: 18px;
+      color: $text-primary;
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.3s;
+
+      &.mobileLinkActive {
+        color: $brand;
+        font-weight: 500;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          right: 20px;
+          height: 2px;
+          background: $brand;
+        }
+      }
+    }
+  }
+
+  .logo svg {
+    @include mobile {
+      width: 100px;
+      height: 32px;
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@use "scss" as *;
+
+.wrapper {
+  max-width: 360px;
+  background-color: $card-bg;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background-color: #d9d9d9;
+  }
+}
+
+.content {
+  padding: $space-xl $space-xs;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.captionSlot {
+  color: $text-secondary;
+  font-size: 14px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $text-secondary;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $space-xs;
+}
+
+.contentSlot {
+  font-size: 16px;
+  font-weight: bold;
+}

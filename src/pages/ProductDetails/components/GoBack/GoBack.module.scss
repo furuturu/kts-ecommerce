@@ -1,0 +1,31 @@
+@use "scss" as *;
+
+.goBack {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  width: 129px;
+  min-height: 48px;
+  cursor: pointer;
+  margin-bottom: 32px;
+
+  &:hover {
+    .backIcon {
+      color: $brand-active;
+    }
+
+    .backText {
+      color: $brand-active;
+    }
+  }
+}
+
+.backIcon {
+  margin: 8px 12px 8px 0;
+  padding-bottom: 7px;
+  overflow: visible;
+}
+
+.backText {
+  padding: 12px 0;
+}

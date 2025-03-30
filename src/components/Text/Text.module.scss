@@ -1,0 +1,71 @@
+@use 'scss' as *;
+
+.primary {
+  color: $text-primary;
+}
+
+.secondary {
+  color: $text-secondary;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-1 {
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.medium {
+  font-weight: 500;
+}
+
+.normal {
+  font-weight: 400;
+}
+
+.p-14 {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.p-16 {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.p-18 {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.p-20 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.button {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.title {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+}
