@@ -1,0 +1,23 @@
+@use 'styles' as *;
+
+.container {
+  max-width: 800px;
+  text-align: center;
+  margin: 90px auto 0;
+  padding: 100px 20px 40px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 20px 15px;
+  }
+}
+
+.title {
+  font-size: 36px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+}

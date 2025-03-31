@@ -1,0 +1,49 @@
+@use "scss" as *;
+
+.checkbox {
+  input[type="checkbox"] {
+    position: relative;
+    top: -3px;
+    left: -4px;
+    background-color: $checkbox-bg;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: 1px solid $checkbox-border;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $checkbox-border-hover;
+    }
+
+    .checkboxChecked & {
+      background-image: url('data:image/svg+xml,\
+       <svg width="30" height="23" viewBox="0 0 30 23" fill="none" xmlns="http://www.w3.org/2000/svg">\
+       <path d="M1.66663 9.35484L11.4625 20L28.3333 1.66667" stroke="#{$brand}" stroke-width="3.33333"/>\
+       </svg>');
+      background-repeat: no-repeat;
+      background-position: top 10px left 5px;
+
+      &:hover {
+        background-position: top 9px left 4px;
+        border-color: $checkbox-border-hover;
+      }
+    }
+
+    .checkboxDisabled &,
+    .checkboxDisabledChecked & {
+      background-color: $checkbox-bg-disabled;
+      border-color: $checkbox-border-disabled;
+      cursor: not-allowed;
+    }
+
+    .checkboxDisabledChecked & {
+      background-image: url('data:image/svg+xml,\
+       <svg width="30" height="23" viewBox="0 0 30 23" fill="none" xmlns="http://www.w3.org/2000/svg">\
+       <path d="M1.66663 9.35484L11.4625 20L28.3333 1.66667" stroke="#{$checkbox-check-disabled}" stroke-width="3.33333"/>\
+       </svg>');
+    }
+  }
+}

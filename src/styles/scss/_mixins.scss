@@ -1,0 +1,80 @@
+@use 'variables' as *;
+
+$mobile: 480px;
+$tablet: 768px;
+$desktop-s: 1024px;
+$desktop-m: 1200px;
+$desktop-l: 1440px;
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin desktop-s {
+  @media (max-width: $desktop-s) {
+    @content;
+  }
+}
+
+@mixin desktop-m {
+  @media (max-width: $desktop-m) {
+    @content;
+  }
+}
+
+@mixin desktop-l {
+  @media (max-width: $desktop-l) {
+    @content;
+  }
+}
+
+
+@mixin button-primary {
+  background-color: $button-primary-bg;
+  color: $button-primary-text;
+
+  &:hover {
+    background-color: $button-primary-bg-hover;
+    color: $button-primary-text-hover;
+  }
+
+  &:active {
+    background-color: $button-primary-bg-active;
+    color: $button-primary-text-active;
+  }
+
+  &:disabled {
+    background-color: $button-primary-bg-disabled;
+    color: $button-primary-text-disabled;
+  }
+}
+
+@mixin input-styles {
+  background-color: $input-bg;
+  border: 1px solid $input-border;
+  color: $input-text;
+
+  &:focus {
+    background-color: $input-bg-focus;
+    border-color: $input-border-focus;
+    color: $input-text-focus;
+  }
+
+  &:disabled {
+    background-color: $input-bg-disabled;
+    border-color: $input-border-disabled;
+    color: $input-text-disabled;
+  }
+
+  &::placeholder {
+    color: $input-placeholder;
+  }
+}

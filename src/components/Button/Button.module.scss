@@ -1,0 +1,31 @@
+@use "scss" as *;
+
+.button {
+  @include button-primary;
+  padding: $space-s $space-l;
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: 400;
+  min-height: 52px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+.disabled {
+  background-color: $button-primary-bg-disabled;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-xxs;
+}
+
+.default {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
