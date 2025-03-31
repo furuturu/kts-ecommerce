@@ -20,6 +20,8 @@ export type CardProps = {
   onClick?: React.MouseEventHandler;
   /** Слот для действия */
   actionSlot?: React.ReactNode;
+  /** Текст для alt атрибута изображения */
+  imageAlt?: string;
 };
 
 const Card: React.FC<CardProps> = ({
@@ -31,10 +33,11 @@ const Card: React.FC<CardProps> = ({
   contentSlot,
   onClick,
   actionSlot,
+  imageAlt,
 }) => {
   return (
     <div className={classNames(className, style.wrapper)} onClick={onClick}>
-      <img className={style.image} src={image} alt="img" />
+      <img className={style.image} src={image} alt={imageAlt} />
       <div className={style.content}>
         {captionSlot && (
           <Text tag="span" view="p-14" color="secondary">

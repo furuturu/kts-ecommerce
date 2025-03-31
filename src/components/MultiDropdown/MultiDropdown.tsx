@@ -91,7 +91,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   };
 
   return (
-    <div ref={dropdownContainerRef} className={`${className}`}>
+    <div ref={dropdownContainerRef} className={className}>
       {value.length > 0 && !isDropdownOpen ? (
         <Input
           value={getTitle(value)}

@@ -33,8 +33,8 @@ const Text: React.FC<TextProps> = ({
     view && styles[view],
     weight && styles[weight],
     color && styles[color],
-    maxLines && styles["line-clamp"],
-    maxLines && styles[`line-clamp-${maxLines}`],
+    maxLines && styles["lineClamp"],
+    maxLines && styles[`lineClamp${maxLines}`],
   );
 
   return <Tag className={classNamesContated}>{children}</Tag>;

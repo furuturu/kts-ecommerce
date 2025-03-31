@@ -15,20 +15,20 @@
   height: 100%;
   font-size: 16px;
   position: relative;
-}
 
-.input::placeholder {
-  color: $input-placeholder;
-  line-height: 20px;
-  font-weight: 400;
-}
+  &::placeholder {
+    color: $input-placeholder;
+    line-height: 20px;
+    font-weight: 400;
+  }
 
-.input:focus::placeholder {
-  color: $text-secondary;
-}
+  &:focus {
+    border: 1px solid $brand;
 
-.input:focus {
-  border: 1px solid $brand;
+    &::placeholder {
+      color: $text-secondary;
+    }
+  }
 }
 
 .icon {

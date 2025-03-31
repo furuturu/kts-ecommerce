@@ -7,14 +7,14 @@ import styles from "./ProductDetails.module.scss";
 import { Details } from "./components/Details";
 import { RelatedItems } from "./components/RelatedItems";
 import { GoBack } from "./components/GoBack/GoBack.tsx";
+import { useCallback } from "react";
 
 export const ProductDetails = () => {
   const { documentId = "" } = useParams();
   const navigate = useNavigate();
   const { product, loading, error } = useProductDetails(documentId);
-  console.log("ProductDetails loaded", product);
 
-  const handleBackClick = () => navigate(-1);
+  const handleBackClick = useCallback(() => navigate(-1), [navigate]);
 
   return (
     <>
