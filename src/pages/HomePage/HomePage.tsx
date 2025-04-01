@@ -21,17 +21,21 @@ export const HomePage: React.FC = () => {
           {loading && <Loader size="l" />}
           {data &&
             data.map((product) => (
-              <NavLink to={product.documentId} key={product.documentId}>
-                <Card
-                  className={styles.card}
-                  captionSlot={product.title}
-                  image={product.images[0].url}
-                  subtitle={product.description}
-                  title={product.title}
+              <Card
+                className={styles.card}
+                captionSlot={product.title}
+                image={product.images[0].url}
+                subtitle={product.description}
+                title={product.title}
+              >
+                <NavLink
+                  to={product.documentId}
+                  key={product.documentId}
+                  className={styles.productLink}
                 />
-              </NavLink>
+              </Card>
             ))}
-          {error && <Text tag="h1">error</Text>}
+          {error && <Text tag="h1">{error}</Text>}
         </div>
       </div>
     </>

@@ -1,6 +1,7 @@
 @use "scss" as *;
 
 .wrapper {
+  position: relative;
   max-width: 360px;
   background-color: $card-bg;
   border-radius: 8px;
