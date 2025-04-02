@@ -1,16 +1,22 @@
 import React from "react";
+import { useState } from "react";
 import styles from "./HomePage.module.scss";
 import { Navbar } from "components/Navbar";
 import { TitleDescription } from "./components/TitleDescription";
 import { SearchFilterPanel } from "./components/SearchFilterPanel";
-import { useProducts } from "../../hooks/useProducts.ts";
-import Loader from "../../components/Loader";
-import Card from "../../components/Card";
-import Text from "../../components/Text";
+import { useProducts } from "hooks/useProducts.ts";
+import Loader from "components/Loader";
+import Card from "components/Card";
+import Text from "components/Text";
 import { NavLink } from "react-router";
+import { Pagination } from "./components/Pagination/Pagination.tsx";
 
 export const HomePage: React.FC = () => {
-  const { data, loading, error } = useProducts();
+  const [pageToDisplay, setPageToDisplay] = useState<number>(1);
+  const { data, loading, error } = useProducts(pageToDisplay);
+  const changePage = (pageNumber: number) => {
+    setPageToDisplay(pageNumber);
+  };
   return (
     <>
       <Navbar />
@@ -19,9 +25,12 @@ export const HomePage: React.FC = () => {
         <SearchFilterPanel />
         <div className={styles.cardContainer}>
           {loading && <Loader size="l" />}
+          {/* todo: юзер френдли еррор компонент*/}
+          {error && <Text tag="h1">{error}</Text>}
           {data &&
-            data.map((product) => (
+            data.data?.map((product) => (
               <Card
+                key={product.id}
                 className={styles.card}
                 captionSlot={product.title}
                 image={product.images[0].url}
@@ -35,8 +44,14 @@ export const HomePage: React.FC = () => {
                 />
               </Card>
             ))}
-          {error && <Text tag="h1">{error}</Text>}
         </div>
+        {data && (
+          <Pagination
+            totalPages={data.meta?.pagination.pageCount}
+            currentPage={pageToDisplay}
+            onPageChange={changePage}
+          />
+        )}
       </div>
     </>
   );
