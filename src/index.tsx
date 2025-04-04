@@ -1,4 +1,5 @@
 import { routesConfig } from "./config/routes.tsx";
+import "./config/configureMobX.ts";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import "styles/index.css";

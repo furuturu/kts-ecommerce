@@ -1,22 +1,24 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./HomePage.module.scss";
 import { Navbar } from "components/Navbar";
 import { TitleDescription } from "./components/TitleDescription";
 import { SearchFilterPanel } from "./components/SearchFilterPanel";
-import { useProducts } from "hooks/useProducts.ts";
 import Loader from "components/Loader";
 import Card from "components/Card";
 import Text from "components/Text";
 import { NavLink } from "react-router";
 import { Pagination } from "./components/Pagination/Pagination.tsx";
+import { productsStore } from "../../store/modules/ProductsStore.ts";
+import { observer } from "mobx-react-lite";
 
-export const HomePage: React.FC = () => {
-  const [pageToDisplay, setPageToDisplay] = useState<number>(1);
-  const { data, loading, error } = useProducts(pageToDisplay);
-  const changePage = (pageNumber: number) => {
-    setPageToDisplay(pageNumber);
-  };
+export const HomePage: React.FC = observer(() => {
+  const { data, loading, error, setPage, currentPage, fetchProducts } =
+    productsStore;
+
+  useEffect(() => {
+    fetchProducts(currentPage);
+  }, [currentPage, fetchProducts]);
+
   return (
     <>
       <Navbar />
@@ -48,11 +50,11 @@ export const HomePage: React.FC = () => {
         {data && (
           <Pagination
             totalPages={data.meta?.pagination.pageCount}
-            currentPage={pageToDisplay}
-            onPageChange={changePage}
+            currentPage={currentPage}
+            onPageChange={setPage}
           />
         )}
       </div>
     </>
   );
-};
+});

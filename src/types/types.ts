@@ -28,7 +28,7 @@ export interface SingleProductResponseByID {
   data: SingleProduct;
 }
 
-export interface StrapiBaseUrlProductsListResponse {
+export interface StrapiProductsListResponseByPage {
   data: SingleProduct[];
   meta: {
     pagination: {
