@@ -9,6 +9,10 @@ export interface ProductCategory {
   documentId: string;
   id: number;
   title: string;
+  image: {
+    url: string;
+    name: string;
+  };
 }
 
 export interface SingleProduct {

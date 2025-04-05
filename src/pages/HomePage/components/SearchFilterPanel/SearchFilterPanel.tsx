@@ -1,28 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Input from "components/Input";
 import styles from "./SearchFilterPanel.module.scss";
 import Button from "components/Button";
-import MultiDropdown from "components/MultiDropdown";
+import MultiDropdown, { Option } from "components/MultiDropdown";
+import { observer } from "mobx-react-lite";
+import { searchFilterStore } from "store/modules/SearchFilterStore.ts";
 
-type TestOption = {
-  key: string;
-  value: string;
-};
+export const SearchFilterPanel: React.FC = observer(() => {
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    categories,
+    setSelectedCategory,
+    fetchCategories,
+    applySearchAndCategory,
+  } = searchFilterStore;
 
-export const SearchFilterPanel: React.FC = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [category, setCategory] = useState<TestOption[]>([]);
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
-  const testOptionsUntilApiWorks: TestOption[] = [
-    { key: "1", value: "test1" },
-    { key: "2", value: "test2" },
-    { key: "3", value: "test3" },
-  ];
-  const testToSetupPlaceholder = () => "Filter";
+  const categoryOptions = categories.map((category) => ({
+    key: category.id,
+    value: category.title,
+  }));
+
+  const selectedCategoryOption = selectedCategory
+    ? categoryOptions.find((option) => String(option.key) === selectedCategory)
+    : null;
+
+  const getDropdownTitle = (selected: Option[]) => {
+    return selected[0]?.value || "Надо выбрать";
+  };
+
+  const handleCategoryChange = (selectedOptions: Option[]) => {
+    const newCategory = String(selectedOptions[0]?.key) || "";
+    setSelectedCategory(newCategory);
+    applySearchAndCategory();
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setSearchValue("");
+    applySearchAndCategory();
   };
 
   return (
@@ -30,18 +50,20 @@ export const SearchFilterPanel: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <Input
           className={styles.searchInput}
-          value={searchValue}
-          onChange={setSearchValue}
+          value={searchQuery}
+          onChange={setSearchQuery}
           placeholder={"Search product"}
         />
-        <Button className={styles.searchButton}>Find now</Button>
+        <Button className={styles.searchButton} type="submit">
+          Find now
+        </Button>
       </form>
       <MultiDropdown
-        getTitle={testToSetupPlaceholder}
-        onChange={setCategory}
-        options={testOptionsUntilApiWorks}
-        value={category}
+        getTitle={getDropdownTitle}
+        onChange={handleCategoryChange}
+        options={categoryOptions}
+        value={selectedCategoryOption ? [selectedCategoryOption] : []}
       ></MultiDropdown>
     </div>
   );
-};
+});

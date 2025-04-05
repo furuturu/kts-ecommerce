@@ -8,7 +8,7 @@ import Card from "components/Card";
 import Text from "components/Text";
 import { NavLink } from "react-router";
 import { Pagination } from "./components/Pagination/Pagination.tsx";
-import { productsStore } from "../../store/modules/ProductsStore.ts";
+import { productsStore } from "store/modules/ProductsStore.ts";
 import { observer } from "mobx-react-lite";
 
 export const HomePage: React.FC = observer(() => {

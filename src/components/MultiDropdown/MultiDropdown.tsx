@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 export type Option = {
   /** Ключ варианта, используется для отправки на бек/использования в коде */
-  key: string;
+  key: string | number;
   /** Значение варианта, отображается пользователю */
   value: string;
 };

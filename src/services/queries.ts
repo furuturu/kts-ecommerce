@@ -4,6 +4,10 @@ export const productQuery = () => ({
   ...populateParameter,
 });
 
+export const categoriesListQuery = () => ({
+  populate: ["image"],
+});
+
 export const listProductsByPageQuery = (
   page: number,
   pageSize: number = 9,
@@ -12,22 +16,43 @@ export const listProductsByPageQuery = (
   pagination: { page, pageSize },
 });
 
-export const searchProductQuery = (searchQueryFromUser: string) => ({
+export const listProductsByUserSearchAndCategory = (
+  page: number = 1,
+  searchQueryFromUser: string,
+  category: string,
+) => ({
   ...populateParameter,
   filters: {
     title: {
       $containsi: searchQueryFromUser,
     },
-  },
-});
-
-export const filterProductsListByCategoryQuery = (category: string) => ({
-  ...populateParameter,
-  filters: {
     productCategory: {
       id: {
         $eq: category,
       },
     },
   },
+  pagination: { page, pageSize: 9 },
 });
+
+//Если понадобится разделить логику
+
+// export const searchProductQuery = (searchQueryFromUser: string) => ({
+//   ...populateParameter,
+//   filters: {
+//     title: {
+//       $containsi: searchQueryFromUser,
+//     },
+//   },
+// });
+//
+// export const filterProductsListByCategoryQuery = (category: string) => ({
+//   ...populateParameter,
+//   filters: {
+//     productCategory: {
+//       id: {
+//         $eq: category,
+//       },
+//     },
+//   },
+// });

@@ -1,9 +1,9 @@
 import { makeObservable, observable, action, runInAction } from "mobx";
 import { getProductsList } from "services/getProductsList.ts";
 import { StrapiProductsListResponseByPage } from "types/types.ts";
+import { getProductsBySearchAndCategory } from "../../services/getProductsBySearchAndCategory.ts";
 
 class ProductsStore {
-  //Initial State
   data: StrapiProductsListResponseByPage | null = null;
   loading = false;
   error: string | null = null;
@@ -15,12 +15,13 @@ class ProductsStore {
       loading: observable,
       error: observable,
       currentPage: observable,
-      fetchProducts: action.bound,
-      setPage: action.bound,
+      fetchProducts: action,
+      setPage: action,
+      fetchProductsBySearchAndCategory: action,
     });
   }
 
-  async fetchProducts(page: number) {
+  fetchProducts = async (page: number) => {
     this.loading = true;
     this.error = null;
 
@@ -41,12 +42,40 @@ class ProductsStore {
         this.loading = false;
       });
     }
-  }
+  };
 
-  setPage(page: number) {
+  setPage = (page: number) => {
     this.currentPage = page;
     this.fetchProducts(page);
-  }
+  };
+
+  fetchProductsBySearchAndCategory = async (
+    page: number,
+    search: string,
+    category: string,
+  ) => {
+    this.loading = true;
+    try {
+      const filteredProductsData = await getProductsBySearchAndCategory(
+        page,
+        search,
+        category,
+      );
+      runInAction(() => {
+        if (filteredProductsData) {
+          this.data = filteredProductsData;
+        }
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.error = String(error);
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
 }
 
 export const productsStore = new ProductsStore();
