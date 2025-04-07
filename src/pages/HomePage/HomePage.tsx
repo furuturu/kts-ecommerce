@@ -125,7 +125,7 @@ export const HomePage: React.FC = observer(() => {
                 title={product.title}
               >
                 <NavLink
-                  to={`/product/${product.documentId}${location.search}`}
+                  to={`/${product.documentId}${location.search}`}
                   key={product.documentId}
                   className={styles.productLink}
                 />
