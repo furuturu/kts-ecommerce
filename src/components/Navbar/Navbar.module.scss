@@ -39,7 +39,7 @@
       display: none;
     }
   }
-
+//todo поправить полосочки чтобы ровненько под текстом
   .link {
     font-size: 18px;
     color: $text-primary;
@@ -106,7 +106,10 @@
       transition: fill 0.3s;
     }
 
-    &:hover .iconSvg,
+   &:hover .iconSvg {
+     fill: $brand-hover
+   }
+
     &.iconActive .iconSvg {
       fill: $brand;
     }
