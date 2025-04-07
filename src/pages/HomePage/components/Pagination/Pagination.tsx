@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Pagination.module.scss";
 import { usePagination } from "hooks/usePagination.ts";
+import { ArrowIcon } from "../ArrowIcon";
 import cn from "classnames";
 
 interface PaginationProps {
@@ -33,8 +34,9 @@ export const Pagination: React.FC<PaginationProps> = ({
           [styles.arrowIsDisabled]: isFirstPage,
         })}
         onClick={handleClickPage(currentPage - 1)}
+        disabled={isFirstPage}
       >
-        BACK
+        <ArrowIcon />
       </button>
       {pageNumbers.map((element, index) => (
         <button
@@ -53,8 +55,9 @@ export const Pagination: React.FC<PaginationProps> = ({
           [styles.arrowIsDisabled]: isLastPage,
         })}
         onClick={handleClickPage(currentPage + 1)}
+        disabled={isLastPage}
       >
-        NEXT
+        <ArrowIcon />
       </button>
     </div>
   );
