@@ -35,24 +35,22 @@ export const listProductsByUserSearchAndCategory = (
   pagination: { page, pageSize: 9 },
 });
 
-//Если понадобится разделить логику
+export const searchProductQuery = (searchQueryFromUser: string) => ({
+  ...populateParameter,
+  filters: {
+    title: {
+      $containsi: searchQueryFromUser,
+    },
+  },
+});
 
-// export const searchProductQuery = (searchQueryFromUser: string) => ({
-//   ...populateParameter,
-//   filters: {
-//     title: {
-//       $containsi: searchQueryFromUser,
-//     },
-//   },
-// });
-//
-// export const filterProductsListByCategoryQuery = (category: string) => ({
-//   ...populateParameter,
-//   filters: {
-//     productCategory: {
-//       id: {
-//         $eq: category,
-//       },
-//     },
-//   },
-// });
+export const filterProductsListByCategoryQuery = (category: string) => ({
+  ...populateParameter,
+  filters: {
+    productCategory: {
+      id: {
+        $eq: category,
+      },
+    },
+  },
+});
