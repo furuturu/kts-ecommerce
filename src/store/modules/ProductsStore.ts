@@ -1,15 +1,25 @@
-import { makeObservable, observable, action, runInAction } from "mobx";
+import {
+  makeObservable,
+  observable,
+  action,
+  runInAction,
+  reaction,
+} from "mobx";
+import { ILocalStore, StrapiProductsListResponseByPage } from "types/types.ts";
 import { getProductsList } from "services/getProductsList.ts";
-import { StrapiProductsListResponseByPage } from "types/types.ts";
-import { getProductsBySearchAndCategory } from "../../services/getProductsBySearchAndCategory.ts";
+import { getProductsBySearchAndCategory } from "services/getProductsBySearchAndCategory.ts";
+import { getProductsBySearch } from "services/getProductsBySearch.ts";
+import { getProductsByCategory } from "services/getProductsByCategory.ts";
+import { SearchFilterStore } from "./SearchFilterStore.ts";
 
-class ProductsStore {
+export class ProductsStore implements ILocalStore {
   data: StrapiProductsListResponseByPage | null = null;
   loading = false;
   error: string | null = null;
   currentPage = 1;
+  private readonly reactionDisposer: () => void;
 
-  constructor() {
+  constructor(private searchFilterStore: SearchFilterStore) {
     makeObservable(this, {
       data: observable.ref,
       loading: observable,
@@ -17,21 +27,42 @@ class ProductsStore {
       currentPage: observable,
       fetchProducts: action,
       setPage: action,
-      fetchProductsBySearchAndCategory: action,
+      resetToFirstPage: action,
+      destroy: action,
     });
+
+    this.reactionDisposer = reaction(
+      () => ({
+        category: this.searchFilterStore.selectedCategory,
+      }),
+      () => {
+        this.resetToFirstPage();
+        this.fetchProducts();
+      },
+    );
   }
 
-  fetchProducts = async (page: number) => {
+  fetchProducts = async (page: number = this.currentPage) => {
     this.loading = true;
-    this.error = null;
-
     try {
-      const productsListData = await getProductsList(page);
+      const { searchQuery, selectedCategory } = this.searchFilterStore;
+      let data;
+      if (searchQuery && selectedCategory) {
+        data = await getProductsBySearchAndCategory(
+          page,
+          searchQuery,
+          selectedCategory,
+        );
+      } else if (searchQuery) {
+        data = await getProductsBySearch(searchQuery);
+      } else if (selectedCategory) {
+        data = await getProductsByCategory(selectedCategory);
+      } else {
+        data = await getProductsList(page);
+      }
       runInAction(() => {
-        if (productsListData) {
-          this.data = productsListData;
-          this.currentPage = page;
-        }
+        this.data = data;
+        this.currentPage = page;
       });
     } catch (error) {
       runInAction(() => {
@@ -49,33 +80,18 @@ class ProductsStore {
     this.fetchProducts(page);
   };
 
-  fetchProductsBySearchAndCategory = async (
-    page: number,
-    search: string,
-    category: string,
-  ) => {
-    this.loading = true;
-    try {
-      const filteredProductsData = await getProductsBySearchAndCategory(
-        page,
-        search,
-        category,
-      );
-      runInAction(() => {
-        if (filteredProductsData) {
-          this.data = filteredProductsData;
-        }
-      });
-    } catch (error) {
-      runInAction(() => {
-        this.error = String(error);
-      });
-    } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
-    }
+  resetToFirstPage = () => {
+    this.currentPage = 1;
   };
+
+  destroy() {
+    this.reactionDisposer();
+    this.data = null;
+    this.loading = false;
+    this.error = null;
+    this.currentPage = 1;
+  }
 }
 
-export const productsStore = new ProductsStore();
+export const createProductsStore = (searchFilterStore: SearchFilterStore) =>
+  new ProductsStore(searchFilterStore);

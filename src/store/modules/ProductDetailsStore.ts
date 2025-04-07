@@ -1,8 +1,9 @@
 import { makeObservable, observable, action, runInAction } from "mobx";
 import { getProductDetails } from "services/getProductDetails.ts";
 import { SingleProduct } from "types/types.ts";
+import { ILocalStore } from "types/types.ts";
 
-class ProductsDetailsStore {
+class ProductDetailsStore implements ILocalStore {
   product: SingleProduct | null = null;
   loading: boolean = false;
   error: string | null = null;
@@ -40,6 +41,10 @@ class ProductsDetailsStore {
   clearProductData = () => {
     this.product = null;
   };
+
+  destroy() {
+    this.clearProductData();
+  }
 }
 
-export const productsDetailsStore = new ProductsDetailsStore();
+export const createProductDetailsStore = () => new ProductDetailsStore();

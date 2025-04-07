@@ -1,9 +1,14 @@
-import { makeObservable, action, observable, runInAction } from "mobx";
-import { productsStore } from "./ProductsStore.ts";
+import {
+  makeObservable,
+  action,
+  observable,
+  runInAction,
+  computed,
+} from "mobx";
 import { getProductCategories } from "services/getProductCategories.ts";
-import { ProductCategory } from "types/types.ts";
+import { ILocalStore, ProductCategory } from "types/types.ts";
 
-class SearchFilterStore {
+export class SearchFilterStore implements ILocalStore {
   searchQuery: string = "";
   categories: ProductCategory[] = [];
   selectedCategory: string = "";
@@ -18,9 +23,10 @@ class SearchFilterStore {
       loading: observable,
       error: observable,
       setSearchQuery: action,
-      fetchCategories: action,
       setSelectedCategory: action,
-      applySearchAndCategory: action,
+      fetchCategories: action,
+      categoryOptions: computed,
+      destroy: action,
     });
   }
 
@@ -41,20 +47,27 @@ class SearchFilterStore {
   };
 
   setSearchQuery = (query: string) => {
-    this.searchQuery = query;
+    this.searchQuery = query.trim();
   };
 
   setSelectedCategory = (category: string) => {
     this.selectedCategory = category;
   };
 
-  applySearchAndCategory = () => {
-    productsStore.fetchProductsBySearchAndCategory(
-      1,
-      this.searchQuery,
-      this.selectedCategory,
-    );
+  get categoryOptions() {
+    return [
+      { key: "", value: "Все категории" },
+      ...this.categories.map((category) => ({
+        key: category.id,
+        value: category.title,
+      })),
+    ];
+  }
+
+  destroy = () => {
+    this.searchQuery = "";
+    this.selectedCategory = "";
   };
 }
 
-export const searchFilterStore = new SearchFilterStore();
+export const createSearchFilterStore = () => new SearchFilterStore();

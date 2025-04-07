@@ -43,3 +43,11 @@ export interface StrapiProductsListResponseByPage {
     };
   };
 }
+
+export interface ILocalStore {
+  /**
+   * Любой локальный store должен реализовывать метод destroy,
+   * в котором реализована логика разрушения стора при демонтировании компонента
+   */
+  destroy(): void;
+}
