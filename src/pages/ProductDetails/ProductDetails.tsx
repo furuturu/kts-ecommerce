@@ -7,20 +7,19 @@ import { Details } from "./components/Details";
 import { RelatedItems } from "./components/RelatedItems";
 import { GoBack } from "./components/GoBack/GoBack.tsx";
 import { useCallback, useEffect } from "react";
-import { productsDetailsStore } from "../../store/modules/ProductsDetailsStore.ts";
+import { createProductDetailsStore } from "store/modules/ProductDetailsStore.ts";
 import { observer } from "mobx-react-lite";
+import { useLocalStore } from "hooks/useLocalStore.ts";
 
 export const ProductDetails = observer(() => {
   const { documentId = "" } = useParams();
   const navigate = useNavigate();
-  const { product, loading, error } = productsDetailsStore;
+  const productDetailsStore = useLocalStore(createProductDetailsStore);
+  const { product, loading, error } = productDetailsStore;
 
   useEffect(() => {
-    productsDetailsStore.fetchProductDetails(documentId);
-    return () => {
-      productsDetailsStore.clearProductData();
-    };
-  }, [documentId]);
+    productDetailsStore.fetchProductDetails(documentId);
+  }, [documentId, productDetailsStore]);
 
   const handleBackClick = useCallback(() => navigate(-1), [navigate]);
 
