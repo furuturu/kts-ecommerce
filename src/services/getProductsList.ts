@@ -1,9 +1,9 @@
 import { strapi } from "./axios.ts";
-import { productQuery } from "./queries.ts";
+import { listProductsByPageQuery } from "./queries.ts";
 
-export const getProductsList = async () => {
-  const response = await strapi.get("", {
-    params: productQuery(),
+export const getProductsList = async (page: number) => {
+  const response = await strapi.get("products", {
+    params: listProductsByPageQuery(page),
   });
   return response.data;
 };

@@ -28,16 +28,20 @@ const Text: React.FC<TextProps> = ({
   color,
   maxLines,
 }) => {
-  const classNamesContated = classNames(
-    className,
-    view && styles[view],
-    weight && styles[weight],
-    color && styles[color],
-    maxLines && styles["line-clamp"],
-    maxLines && styles[`line-clamp-${maxLines}`],
+  return (
+    <Tag
+      className={classNames(
+        className,
+        view && styles[view],
+        weight && styles[weight],
+        color && styles[color],
+        maxLines && styles["lineClamp"],
+        maxLines && styles[`lineClamp${maxLines}`],
+      )}
+    >
+      {children}
+    </Tag>
   );
-
-  return <Tag className={classNamesContated}>{children}</Tag>;
 };
 
 export default Text;

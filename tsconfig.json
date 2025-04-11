@@ -17,7 +17,9 @@
       "constants": ["constants/*"],
       "pages": ["pages/*"],
       "hooks": ["hooks/*"],
-      "types": ["types/*"]
+      "types": ["types/*"],
+      "services": ["services/*"],
+      "store": ["store/*"]
     },
 
     "moduleResolution": "bundler",

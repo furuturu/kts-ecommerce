@@ -14,7 +14,7 @@
 
 .disabled {
   background-color: $button-primary-bg-disabled;
-  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .loading {

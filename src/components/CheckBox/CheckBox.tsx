@@ -1,5 +1,6 @@
 import React from "react";
 import style from "./CheckBox.module.scss";
+import cn from "classnames";
 
 export type CheckBoxProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -14,17 +15,15 @@ const CheckBox: React.FC<CheckBoxProps> = ({ onChange, ...props }) => {
     onChange(event.target.checked);
   };
 
-  const getClassName = () => {
-    if (props.disabled) {
-      return props.checked
-        ? style.checkboxDisabledChecked
-        : style.checkboxDisabled;
-    }
-    return props.checked ? style.checkboxChecked : style.checkbox;
-  };
-
   return (
-    <label className={getClassName()}>
+    <label
+      className={cn({
+        [style.checkboxDisabledChecked]: props.disabled && props.checked,
+        [style.checkboxDisabled]: props.disabled && !props.checked,
+        [style.checkboxChecked]: props.checked && !props.disabled,
+        [style.checkbox]: !props.checked && !props.disabled,
+      })}
+    >
       <input type="checkbox" onChange={handleChange} {...props} />
     </label>
   );

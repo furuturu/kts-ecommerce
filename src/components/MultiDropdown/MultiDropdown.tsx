@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 export type Option = {
   /** Ключ варианта, используется для отправки на бек/использования в коде */
-  key: string;
+  key: string | number;
   /** Значение варианта, отображается пользователю */
   value: string;
 };
@@ -33,12 +33,16 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   className,
   disabled,
 }) => {
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownContainerRef = useRef<HTMLDivElement>(null);
-  const [currentlySelected, setCurrentlySelected] = useState<Option[]>(value);
 
+  // Фильтрация опций по введенному тексту
+  const filteredOptions = options.filter((option) =>
+    option.value.toLowerCase().includes(inputValue.toLowerCase()),
+  );
+
+  // Обработчик клика вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -50,71 +54,39 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const filtered = options.filter((option) =>
-      option.value.toLowerCase().includes(inputValue.toLowerCase()),
-    );
-    setFilteredOptions(filtered);
-  }, [inputValue, options]);
-
-  const handleInputChange = (value: string) => {
-    setInputValue(value);
-  };
-
-  const handleInputFocus = () => {
-    setIsDropdownOpen(true);
-  };
-
+  // Обработчик выбора опции
   const handleOptionClick = (option: Option) => {
-    const isSelected = currentlySelected.some(
-      (selected) => selected.key === option.key,
-    );
-
-    if (!isSelected) {
-      const newValue = [...value, option];
-      const newActiveOptions = [...currentlySelected, option];
-      onChange(newValue);
-      setCurrentlySelected(newActiveOptions);
-    } else {
-      const newValue = value.filter((selected) => selected.key !== option.key);
-      const newActiveOptions = currentlySelected.filter(
-        (selected) => selected.key !== option.key,
-      );
-      onChange(newValue);
-      setCurrentlySelected(newActiveOptions);
-    }
+    const isSelected = value.some((selected) => selected.key === option.key);
+    onChange(isSelected ? [] : [option]); // Тогглим выбор опции
+    setIsDropdownOpen(false); // Закрываем dropdown после выбора
   };
+
+  // Для отображения инпута либо текст из getTitle (если есть категория),
+  // либо текущий введенный текст (если dropdown открыт)
+  const inputDisplayValue =
+    !isDropdownOpen && value.length > 0 ? getTitle(value) : inputValue;
 
   return (
-    <div ref={dropdownContainerRef} className={`${className}`}>
-      {value.length > 0 && !isDropdownOpen ? (
-        <Input
-          value={getTitle(value)}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          disabled={disabled}
-          afterSlot={true}
-        />
-      ) : (
-        <Input
-          value={inputValue}
-          placeholder={getTitle(value)}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          disabled={disabled}
-          afterSlot={true}
-        />
-      )}
+    <div
+      ref={dropdownContainerRef}
+      className={classNames(className, style["multiDropdown"])}
+    >
+      <Input
+        value={inputDisplayValue}
+        placeholder={getTitle(value)}
+        onChange={setInputValue}
+        onFocus={() => setIsDropdownOpen(true)}
+        disabled={disabled}
+        afterSlot={true}
+      />
 
       {isDropdownOpen && !disabled && (
         <div className={style.dropdown}>
           {filteredOptions.map((option) => {
-            const isActive = currentlySelected.some(
+            const isSelected = value.some(
               (selected) => selected.key === option.key,
             );
             return (
@@ -122,7 +94,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
                 key={option.key}
                 onClick={() => handleOptionClick(option)}
                 className={classNames(style.option, {
-                  [style.optionActive]: isActive,
+                  [style.optionActive]: isSelected,
                 })}
               >
                 {option.value}

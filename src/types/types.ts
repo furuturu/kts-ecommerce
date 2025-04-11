@@ -9,6 +9,10 @@ export interface ProductCategory {
   documentId: string;
   id: number;
   title: string;
+  image: {
+    url: string;
+    name: string;
+  };
 }
 
 export interface SingleProduct {
@@ -28,7 +32,7 @@ export interface SingleProductResponseByID {
   data: SingleProduct;
 }
 
-export interface StrapiBaseUrlProductsListResponse {
+export interface StrapiProductsListResponseByPage {
   data: SingleProduct[];
   meta: {
     pagination: {
@@ -38,4 +42,12 @@ export interface StrapiBaseUrlProductsListResponse {
       total: number;
     };
   };
+}
+
+export interface ILocalStore {
+  /**
+   * Любой локальный store должен реализовывать метод destroy,
+   * в котором реализована логика разрушения стора при демонтировании компонента
+   */
+  destroy(): void;
 }

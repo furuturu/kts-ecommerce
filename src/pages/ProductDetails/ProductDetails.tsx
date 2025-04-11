@@ -1,20 +1,27 @@
 import { Navbar } from "components/Navbar";
 import { useNavigate, useParams } from "react-router";
-import { useProductDetails } from "hooks/useProductDetails.ts";
 import Loader from "components/Loader";
 import Text from "components/Text";
 import styles from "./ProductDetails.module.scss";
 import { Details } from "./components/Details";
 import { RelatedItems } from "./components/RelatedItems";
 import { GoBack } from "./components/GoBack/GoBack.tsx";
+import { useCallback, useEffect } from "react";
+import { createProductDetailsStore } from "store/modules/ProductDetailsStore.ts";
+import { observer } from "mobx-react-lite";
+import { useLocalStore } from "hooks/useLocalStore.ts";
 
-export const ProductDetails = () => {
+export const ProductDetails = observer(() => {
   const { documentId = "" } = useParams();
   const navigate = useNavigate();
-  const { product, loading, error } = useProductDetails(documentId);
-  console.log("ProductDetails loaded", product);
+  const productDetailsStore = useLocalStore(createProductDetailsStore);
+  const { product, loading, error } = productDetailsStore;
 
-  const handleBackClick = () => navigate(-1);
+  useEffect(() => {
+    productDetailsStore.fetchProductDetails(documentId);
+  }, [documentId, productDetailsStore]);
+
+  const handleBackClick = useCallback(() => navigate(-1), [navigate]);
 
   return (
     <>
@@ -32,4 +39,4 @@ export const ProductDetails = () => {
       </div>
     </>
   );
-};
+});

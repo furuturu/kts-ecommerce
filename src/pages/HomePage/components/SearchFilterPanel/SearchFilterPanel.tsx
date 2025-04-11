@@ -1,47 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Input from "components/Input";
 import styles from "./SearchFilterPanel.module.scss";
 import Button from "components/Button";
-import MultiDropdown from "components/MultiDropdown";
+import MultiDropdown, { Option } from "components/MultiDropdown";
+import { observer } from "mobx-react-lite";
+import { SearchFilterStore } from "store/modules/SearchFilterStore.ts";
 
-type TestOption = {
-  key: string;
-  value: string;
-};
+interface SearchFilterPanelProps {
+  searchFilterStore: SearchFilterStore;
+  onFilterApply: () => void;
+}
 
-export const SearchFilterPanel: React.FC = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [category, setCategory] = useState<TestOption[]>([]);
+export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
+  ({ searchFilterStore, onFilterApply }) => {
+    const {
+      categories,
+      fetchCategories,
+      selectedCategory,
+      setSelectedCategory,
+      searchQuery,
+      setSearchQuery,
+    } = searchFilterStore;
 
-  const testOptionsUntilApiWorks: TestOption[] = [
-    { key: "1", value: "test1" },
-    { key: "2", value: "test2" },
-    { key: "3", value: "test3" },
-  ];
-  const testToSetupPlaceholder = () => "Filter";
+    useEffect(() => {
+      fetchCategories();
+    }, [searchFilterStore, fetchCategories]);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    setSearchValue("");
-  };
+    const categoryOptions = [
+      { key: "", value: "Все категории" },
+      ...categories.map((category) => ({
+        key: category.id,
+        value: category.title,
+      })),
+    ];
 
-  return (
-    <div className={styles.container}>
-      <form onSubmit={handleSubmit}>
-        <Input
-          className={styles.searchInput}
-          value={searchValue}
-          onChange={setSearchValue}
-          placeholder={"Search product"}
-        />
-        <Button className={styles.searchButton}>Find now</Button>
-      </form>
-      <MultiDropdown
-        getTitle={testToSetupPlaceholder}
-        onChange={setCategory}
-        options={testOptionsUntilApiWorks}
-        value={category}
-      ></MultiDropdown>
-    </div>
-  );
-};
+    const selectedCategoryOption = selectedCategory
+      ? categoryOptions.find(
+          (option) => String(option.key) === selectedCategory,
+        )
+      : null;
+
+    const getDropdownTitle = (selected: Option[]) => {
+      return selected[0]?.value || "Filter";
+    };
+
+    const handleCategoryChange = (selectedOptions: Option[]) => {
+      const newCategory =
+        selectedOptions.length > 0 ? String(selectedOptions[0]?.key) : "";
+      setSelectedCategory(newCategory);
+      onFilterApply();
+    };
+
+    const handleSubmit = (event: React.FormEvent) => {
+      event.preventDefault();
+      onFilterApply();
+    };
+
+    return (
+      <div className={styles.container}>
+        <form onSubmit={handleSubmit}>
+          <Input
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={"Search product"}
+          />
+          <Button className={styles.searchButton} type="submit">
+            Find now
+          </Button>
+        </form>
+        <MultiDropdown
+          getTitle={getDropdownTitle}
+          onChange={handleCategoryChange}
+          options={categoryOptions}
+          value={selectedCategoryOption ? [selectedCategoryOption] : []}
+        ></MultiDropdown>
+      </div>
+    );
+  },
+);

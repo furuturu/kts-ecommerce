@@ -17,22 +17,16 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const buttonClassName = classNames(style.button, className, {
-    [style.loading]: loading,
-    [style.disabled]: disabled,
-    [style.default]: !loading || !disabled,
-    [style.animation]: !loading && !disabled,
-  });
-
   return (
     <button
       {...props}
-      className={buttonClassName}
+      className={classNames(style.button, className, {
+        [style.loading]: loading,
+        [style.disabled]: disabled,
+      })}
       disabled={disabled || loading}
     >
-      {(loading && disabled) || loading ? (
-        <Loader size="s" className="button-loader" />
-      ) : null}
+      {loading && <Loader size="s" mode="button" />}
       {children}
     </button>
   );

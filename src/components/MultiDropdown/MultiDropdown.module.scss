@@ -1,10 +1,19 @@
 @use 'scss' as *;
 
+.multiDropdown {
+  width: 400px;
+}
 .dropdown {
   margin-top: $space-xxs;
   width: 400px;
   background-color: $dropdown-options-bg;
   box-shadow: $dropdown-shadow;
+  position: absolute;
+  z-index: $dropdown-z-index;
+
+  .option {
+    cursor: pointer;
+  }
 }
 
 .option {
