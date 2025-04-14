@@ -6,91 +6,24 @@ import { SearchFilterPanel } from "./components/SearchFilterPanel";
 import Loader from "components/Loader";
 import Card from "components/Card";
 import Text from "components/Text";
-import { NavLink, useLocation, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import { Pagination } from "./components/Pagination";
 import { observer } from "mobx-react-lite";
 import { useLocalStore } from "hooks/useLocalStore.ts";
-import {
-  createSearchFilterStore,
-  SearchFilterStore,
-} from "store/modules/SearchFilterStore.ts";
 import { createProductsStore } from "store/modules/ProductsStore.ts";
-import { rootStore } from "store/global/RootStore.ts";
-import qs from "qs";
-
-interface UrlParams {
-  category?: string;
-  search?: string;
-  page?: string | number;
-}
+import { createCategoriesStore } from "store/modules/CategoryStore.ts";
+import { useQueryParamsStoreInit } from "hooks/useQueryParamsStoreInit.ts";
 
 export const HomePage: React.FC = observer(() => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const searchFilterStore = useLocalStore(createSearchFilterStore);
-  const productStore = useLocalStore(() =>
-    createProductsStore(searchFilterStore),
-  );
+  useQueryParamsStoreInit();
+  const productStore = useLocalStore(() => createProductsStore());
+  const categoriesStore = useLocalStore(createCategoriesStore);
+
+  useEffect(() => {
+    productStore.initFromQueryParameters();
+  }, [productStore]);
 
   const { data, loading, error } = productStore;
-
-  useEffect(() => {
-    const params = rootStore.query.params;
-    const initialParams: Partial<SearchFilterStore> = {};
-
-    if (params.category) {
-      initialParams.selectedCategory = params.category as string;
-    }
-
-    if (params.search) {
-      initialParams.searchQuery = params.search as string;
-    }
-
-    if (params.page) {
-      productStore.currentPage = Number(params.page);
-    }
-
-    searchFilterStore.setSearchQuery(initialParams.searchQuery || "");
-    searchFilterStore.setSelectedCategory(initialParams.selectedCategory || "");
-
-    productStore.fetchProducts();
-  }, [productStore, searchFilterStore]);
-
-  useEffect(() => {
-    const updateUrlParams = () => {
-      const params: UrlParams = {};
-
-      if (searchFilterStore.selectedCategory) {
-        params.category = searchFilterStore.selectedCategory;
-      }
-
-      if (productStore.currentPage !== 1) {
-        params.page = String(productStore.currentPage);
-      }
-
-      const queryString = qs.stringify(params);
-      navigate(`?${queryString}`, { replace: true });
-    };
-
-    updateUrlParams();
-  }, [searchFilterStore.selectedCategory, productStore.currentPage, navigate]);
-
-  const handleFiltersApply = useCallback(() => {
-    productStore.resetToFirstPage();
-    const params: UrlParams = {};
-
-    if (searchFilterStore.selectedCategory) {
-      params.category = searchFilterStore.selectedCategory;
-    }
-
-    if (searchFilterStore.searchQuery) {
-      params.search = searchFilterStore.searchQuery;
-    }
-
-    const queryString = qs.stringify(params);
-    navigate(`?${queryString}`, { replace: true });
-    productStore.fetchProducts();
-  }, [searchFilterStore, productStore, navigate]);
 
   const handlePageChange = useCallback(
     (page: number) => {
@@ -105,8 +38,8 @@ export const HomePage: React.FC = observer(() => {
       <div className={styles.container}>
         <TitleDescription />
         <SearchFilterPanel
-          searchFilterStore={searchFilterStore}
-          onFilterApply={handleFiltersApply}
+          categoriesStore={categoriesStore}
+          productsStore={productStore}
         />
         <div className={styles.cardContainer}>
           {loading && <Loader size="l" />}
@@ -125,7 +58,7 @@ export const HomePage: React.FC = observer(() => {
                 title={product.title}
               >
                 <NavLink
-                  to={`/${product.documentId}${location.search}`}
+                  to={`/${product.documentId}`}
                   key={product.documentId}
                   className={styles.productLink}
                 />
