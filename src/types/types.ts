@@ -15,6 +15,10 @@ export interface ProductCategory {
   };
 }
 
+export interface ProductCategoryResponse {
+  data: ProductCategory[];
+}
+
 export interface SingleProduct {
   id: number;
   documentId: string;
@@ -32,7 +36,7 @@ export interface SingleProductResponseByID {
   data: SingleProduct;
 }
 
-export interface StrapiProductsListResponseByPage {
+export interface StrapiProductsListResponse {
   data: SingleProduct[];
   meta: {
     pagination: {
@@ -50,4 +54,30 @@ export interface ILocalStore {
    * в котором реализована логика разрушения стора при демонтировании компонента
    */
   destroy(): void;
+}
+
+export interface ApiRequestOptions {
+  documentId?: string;
+  page?: number;
+  pageSize?: number;
+  searchQuery?: string;
+  category?: string;
+}
+
+export interface QueryParameters {
+  populate: string | string[];
+  pagination?: {
+    page: number;
+    pageSize: number;
+  };
+  filters?: {
+    title?: {
+      $containsi: string;
+    };
+    productCategory?: {
+      id: {
+        $eq: string;
+      };
+    };
+  };
 }
