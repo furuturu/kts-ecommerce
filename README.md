@@ -1,54 +1,63 @@
-# React + TypeScript + Vite
+# Быстрый старт
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Установка зависимостей
 
-Currently, two official plugins are available:
+yarn install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Запуск development-сервера
 
-## Expanding the ESLint configuration
+yarn dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Приложение будет доступно по адресу: http://localhost:3000
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Сборка production-версии
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+yarn build
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Собранные файлы будут помещены в директорию dist/
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Проверка кода
+
+###### Проверка TypeScript типов
+yarn ts-check
+
+###### Линтинг кода
+yarn lint
+
+###### Автоисправление некоторых ошибок линтера
+yarn lint:fix
+
+
+# Проект использует современный стек инструментов для разработки:
+
+**Сборка**: Webpack с оптимизированными конфигурациями для development и production
+
+**JavaScript/TypeScript**:
+
+Поддержка современных синтаксических конструкций через Babel
+
+Полноценная работа с TypeScript типами
+
+**Стили**:
+
+SCSS/SASS препроцессинг
+
+CSS Modules для изолированных стилей
+
+Автоматическое извлечение CSS в production-режиме
+
+**Разработка**:
+
+Hot Module Replacement для мгновенных обновлений
+
+Удобные алиасы для импортов
+
+**Дополнительно**:
+
+Поддержка статических ассетов
+
+Современный синтаксис (async/await, optional chaining и др.)
+
+Проверка типов TypeScript и линтинг ESLint
+
+
