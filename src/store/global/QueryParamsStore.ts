@@ -1,42 +1,49 @@
-// https://lms.metaclass.kts.studio/lesson/165/unit/309
+// https://lms.metaclass.kts.studio/lesson/165/unit/
 
-import { action, computed, makeObservable, observable } from "mobx";
-import * as qs from "qs";
+import { action, makeObservable, observable } from "mobx";
+import qs from "qs";
 
-type PrivateFields = "_params";
+type PrivateFields = "_parsedQueryParameters";
 
-export default class QueryParamsStore {
-  private _params: qs.ParsedQs = {};
-  private _search: string = "";
+export class QueryParamsStore {
+  /** Разобранные параметры запроса из строки URL */
+  private _parsedQueryParameters: qs.ParsedQs = {};
+  /** Исходная строка URL (это которая без знака "?") */
+  private _initialURLQuery: string = "";
 
   constructor() {
     makeObservable<QueryParamsStore, PrivateFields>(this, {
-      _params: observable.ref,
-      params: computed,
-      setSearch: action,
+      _parsedQueryParameters: observable.ref,
+      setURLQueryParameters: action,
     });
   }
 
-  get params() {
-    return this._params;
-  }
-
-  getParam(
+  /** Получение значения по ключу
+   *
+   * @param key - Имя параметра, который нужно получить
+   * @returns Значение параметра (строка / массив / объект)
+   */
+  getParameterValue(
     key: string,
-  ): undefined | string | string[] | qs.ParsedQs | qs.ParsedQs[] {
-    return String(this._params[key]);
+  ):
+    | undefined
+    | string
+    | string[]
+    | qs.ParsedQs
+    | qs.ParsedQs[]
+    | (string | qs.ParsedQs)[] {
+    return this._parsedQueryParameters[key];
   }
 
-  setParam(key: string, value: string) {
-    this._params = { ...this._params, [key]: value };
-  }
+  /** Обновляет данные на основе новой строки запроса URL */
+  setURLQueryParameters(urlQuery: string) {
+    const normalizedURLQuery = urlQuery.startsWith("?")
+      ? urlQuery.slice(1)
+      : urlQuery;
 
-  setSearch(search: string) {
-    search = search.startsWith("?") ? search.slice(1) : search;
-
-    if (this._search !== search) {
-      this._search = search;
-      this._params = qs.parse(search);
+    if (this._initialURLQuery !== normalizedURLQuery) {
+      this._initialURLQuery = normalizedURLQuery;
+      this._parsedQueryParameters = qs.parse(normalizedURLQuery);
     }
   }
 }
