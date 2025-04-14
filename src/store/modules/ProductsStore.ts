@@ -1,68 +1,50 @@
-import {
-  makeObservable,
-  observable,
-  action,
-  runInAction,
-  reaction,
-} from "mobx";
-import { ILocalStore, StrapiProductsListResponseByPage } from "types/types.ts";
-import { getProductsList } from "services/getProductsList.ts";
-import { getProductsBySearchAndCategory } from "services/getProductsBySearchAndCategory.ts";
-import { getProductsBySearch } from "services/getProductsBySearch.ts";
-import { getProductsByCategory } from "services/getProductsByCategory.ts";
-import { SearchFilterStore } from "./SearchFilterStore.ts";
+import { makeObservable, observable, action, runInAction } from "mobx";
+import { ILocalStore, StrapiProductsListResponse } from "types/types.ts";
+import { rootStore, RootStore } from "../global/RootStore.ts";
 
 export class ProductsStore implements ILocalStore {
-  data: StrapiProductsListResponseByPage | null = null;
+  data: StrapiProductsListResponse | null = null;
   loading = false;
   error: string | null = null;
   currentPage = 1;
-  private readonly reactionDisposer: () => void;
+  searchQuery: string = "";
+  selectedCategory: string = "";
+  private _rootStore: RootStore;
+  private _isInitialized: boolean = false; // 100% защита от перерендеров
 
-  constructor(private searchFilterStore: SearchFilterStore) {
+  constructor(rootStore: RootStore) {
+    this._rootStore = rootStore;
     makeObservable(this, {
       data: observable.ref,
       loading: observable,
       error: observable,
       currentPage: observable,
-      fetchProducts: action,
+      searchQuery: observable,
+      selectedCategory: observable,
+      getProducts: action,
       setPage: action,
+      setSearchQuery: action,
+      setSelectedCategory: action,
       resetToFirstPage: action,
+      initFromQueryParameters: action,
+      updateQueryParameters: action,
       destroy: action,
     });
-
-    this.reactionDisposer = reaction(
-      () => ({
-        category: this.searchFilterStore.selectedCategory,
-      }),
-      () => {
-        this.resetToFirstPage();
-        this.fetchProducts();
-      },
-    );
   }
 
-  fetchProducts = async (page: number = this.currentPage) => {
+  getProducts = async (page: number = this.currentPage) => {
     this.loading = true;
     try {
-      const { searchQuery, selectedCategory } = this.searchFilterStore;
-      let data;
-      if (searchQuery && selectedCategory) {
-        data = await getProductsBySearchAndCategory(
+      const data: StrapiProductsListResponse =
+        await this._rootStore.api.fetchProducts(
           page,
-          searchQuery,
-          selectedCategory,
+          this.searchQuery,
+          this.selectedCategory,
         );
-      } else if (searchQuery) {
-        data = await getProductsBySearch(searchQuery);
-      } else if (selectedCategory) {
-        data = await getProductsByCategory(selectedCategory);
-      } else {
-        data = await getProductsList(page);
-      }
       runInAction(() => {
         this.data = data;
         this.currentPage = page;
+        this.updateQueryParameters();
       });
     } catch (error) {
       runInAction(() => {
@@ -75,9 +57,74 @@ export class ProductsStore implements ILocalStore {
     }
   };
 
+  initFromQueryParameters = () => {
+    if (this._isInitialized) return;
+
+    const pageParam = this._rootStore.query.getParameterValue("page") as string;
+    const searchParam = this._rootStore.query.getParameterValue(
+      "search",
+    ) as string;
+    const categoryParam = this._rootStore.query.getParameterValue(
+      "category",
+    ) as string;
+
+    if (pageParam) {
+      this.currentPage = parseInt(pageParam);
+    }
+    if (searchParam) {
+      this.searchQuery = searchParam;
+    }
+    if (categoryParam) {
+      this.selectedCategory = categoryParam;
+    }
+
+    this._isInitialized = true;
+    this.getProducts();
+  };
+
+  updateQueryParameters = () => {
+    const queryParams: Record<string, string> = {};
+    if (this.currentPage > 1) {
+      queryParams.page = String(this.currentPage);
+    }
+
+    if (this.searchQuery) {
+      queryParams.search = this.searchQuery;
+    }
+    if (this.selectedCategory) {
+      queryParams.category = this.selectedCategory;
+    }
+
+    const queryParamsParsedToString = new URLSearchParams(
+      queryParams,
+    ).toString();
+
+    const newUrl =
+      window.location.pathname +
+      (queryParamsParsedToString ? `?${queryParamsParsedToString}` : "");
+
+    if (window.location.pathname + window.location.search !== newUrl) {
+      window.history.pushState({}, "", newUrl);
+    }
+
+    this._rootStore.query.setURLQueryParameters(queryParamsParsedToString);
+  };
+
   setPage = (page: number) => {
     this.currentPage = page;
-    this.fetchProducts(page);
+    this.getProducts(page);
+  };
+
+  setSearchQuery = (query: string) => {
+    this.searchQuery = query.trim();
+    this.resetToFirstPage();
+    this.getProducts();
+  };
+
+  setSelectedCategory = (category: string) => {
+    this.selectedCategory = category;
+    this.resetToFirstPage();
+    this.getProducts();
   };
 
   resetToFirstPage = () => {
@@ -85,13 +132,14 @@ export class ProductsStore implements ILocalStore {
   };
 
   destroy() {
-    this.reactionDisposer();
     this.data = null;
     this.loading = false;
     this.error = null;
     this.currentPage = 1;
+    this.searchQuery = "";
+    this.selectedCategory = "";
+    this._isInitialized = false;
   }
 }
 
-export const createProductsStore = (searchFilterStore: SearchFilterStore) =>
-  new ProductsStore(searchFilterStore);
+export const createProductsStore = () => new ProductsStore(rootStore);
