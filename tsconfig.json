@@ -21,8 +21,12 @@
       "services": ["services/*"],
       "store": ["store/*"]
     },
+    "allowJs": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
 
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -35,5 +39,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

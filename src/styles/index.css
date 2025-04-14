@@ -1,4 +1,4 @@
-@import "./Roboto/fonts.css";
+/*@import "./Roboto/fonts.css";*/
 
 /** {*/
 /*  border: solid 1px gray;*/
@@ -16,6 +16,7 @@ html {
   background-color: #f3f3f3;
   scroll-behavior: smooth;
   font-family: Roboto, sans-serif;
+  overflow-y: scroll;
 }
 
 a {

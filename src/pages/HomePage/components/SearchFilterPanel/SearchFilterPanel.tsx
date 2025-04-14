@@ -1,42 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "components/Input";
 import styles from "./SearchFilterPanel.module.scss";
 import Button from "components/Button";
 import MultiDropdown, { Option } from "components/MultiDropdown";
 import { observer } from "mobx-react-lite";
-import { SearchFilterStore } from "store/modules/SearchFilterStore.ts";
+import { CategoryStore } from "store/modules/CategoryStore.ts";
+import { ProductsStore } from "store/modules/ProductsStore.ts";
 
 interface SearchFilterPanelProps {
-  searchFilterStore: SearchFilterStore;
-  onFilterApply: () => void;
+  categoriesStore: CategoryStore;
+  productsStore: ProductsStore;
 }
 
 export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
-  ({ searchFilterStore, onFilterApply }) => {
-    const {
-      categories,
-      fetchCategories,
-      selectedCategory,
-      setSelectedCategory,
-      searchQuery,
-      setSearchQuery,
-    } = searchFilterStore;
+  ({ categoriesStore, productsStore }) => {
+    useEffect(() => {
+      categoriesStore.getCategories();
+    }, [categoriesStore]);
+
+    const [inputValue, setInputValue] = useState(productsStore.searchQuery);
+    const handleInputChange = (value: string) => {
+      setInputValue(value);
+    };
 
     useEffect(() => {
-      fetchCategories();
-    }, [searchFilterStore, fetchCategories]);
+      setInputValue(productsStore.searchQuery);
+    }, [productsStore.searchQuery]);
 
-    const categoryOptions = [
-      { key: "", value: "Все категории" },
-      ...categories.map((category) => ({
-        key: category.id,
-        value: category.title,
-      })),
-    ];
+    const categoryOptions = categoriesStore.categoryOptions;
 
-    const selectedCategoryOption = selectedCategory
+    const selectedCategoryOption = productsStore.selectedCategory
       ? categoryOptions.find(
-          (option) => String(option.key) === selectedCategory,
+          (option) => String(option.key) === productsStore.selectedCategory,
         )
       : null;
 
@@ -47,13 +42,12 @@ export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
     const handleCategoryChange = (selectedOptions: Option[]) => {
       const newCategory =
         selectedOptions.length > 0 ? String(selectedOptions[0]?.key) : "";
-      setSelectedCategory(newCategory);
-      onFilterApply();
+      productsStore.setSelectedCategory(newCategory);
     };
 
     const handleSubmit = (event: React.FormEvent) => {
       event.preventDefault();
-      onFilterApply();
+      productsStore.setSearchQuery(inputValue);
     };
 
     return (
@@ -61,8 +55,8 @@ export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
         <form onSubmit={handleSubmit}>
           <Input
             className={styles.searchInput}
-            value={searchQuery}
-            onChange={setSearchQuery}
+            value={inputValue}
+            onChange={handleInputChange}
             placeholder={"Search product"}
           />
           <Button className={styles.searchButton} type="submit">

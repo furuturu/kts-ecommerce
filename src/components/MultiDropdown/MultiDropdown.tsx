@@ -58,12 +58,15 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   }, []);
 
   // Обработчик выбора опции
-  const handleOptionClick = (option: Option) => {
+  const handleOptionClick = (option: Option) => () => {
     const isSelected = value.some((selected) => selected.key === option.key);
     onChange(isSelected ? [] : [option]); // Тогглим выбор опции
     setIsDropdownOpen(false); // Закрываем dropdown после выбора
   };
 
+  const handleOnFocus = () => {
+    setIsDropdownOpen(true);
+  };
   // Для отображения инпута либо текст из getTitle (если есть категория),
   // либо текущий введенный текст (если dropdown открыт)
   const inputDisplayValue =
@@ -78,7 +81,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
         value={inputDisplayValue}
         placeholder={getTitle(value)}
         onChange={setInputValue}
-        onFocus={() => setIsDropdownOpen(true)}
+        onFocus={handleOnFocus}
         disabled={disabled}
         afterSlot={true}
       />
@@ -92,7 +95,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
             return (
               <div
                 key={option.key}
-                onClick={() => handleOptionClick(option)}
+                onClick={handleOptionClick(option)}
                 className={classNames(style.option, {
                   [style.optionActive]: isSelected,
                 })}

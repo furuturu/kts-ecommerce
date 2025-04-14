@@ -18,7 +18,7 @@ export const ProductDetails = observer(() => {
   const { product, loading, error } = productDetailsStore;
 
   useEffect(() => {
-    productDetailsStore.fetchProductDetails(documentId);
+    productDetailsStore.getProductDetails(documentId);
   }, [documentId, productDetailsStore]);
 
   const handleBackClick = useCallback(() => navigate(-1), [navigate]);
