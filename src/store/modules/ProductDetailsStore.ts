@@ -1,27 +1,30 @@
 import { makeObservable, observable, action, runInAction } from "mobx";
-import { getProductDetails } from "services/getProductDetails.ts";
-import { SingleProduct } from "types/types.ts";
+import { SingleProduct, SingleProductResponseByID } from "types/types.ts";
 import { ILocalStore } from "types/types.ts";
+import { rootStore, RootStore } from "../global/RootStore.ts";
 
 class ProductDetailsStore implements ILocalStore {
   product: SingleProduct | null = null;
   loading: boolean = false;
   error: string | null = null;
+  private _rootStore: RootStore;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this._rootStore = rootStore;
     makeObservable(this, {
       product: observable.ref,
       loading: observable,
       error: observable,
-      fetchProductDetails: action,
+      getProductDetails: action,
       clearProductData: action,
     });
   }
 
-  fetchProductDetails = async (documentId: string) => {
+  getProductDetails = async (documentId: string) => {
     this.loading = true;
     try {
-      const response = await getProductDetails(documentId);
+      const response: SingleProductResponseByID =
+        await this._rootStore.api.fetchProductDetails(documentId);
       runInAction(() => {
         if (response.data) {
           this.product = response.data;
@@ -47,4 +50,5 @@ class ProductDetailsStore implements ILocalStore {
   }
 }
 
-export const createProductDetailsStore = () => new ProductDetailsStore();
+export const createProductDetailsStore = () =>
+  new ProductDetailsStore(rootStore);
