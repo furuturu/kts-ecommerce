@@ -23,6 +23,9 @@ export class ApiStore {
     endpoint: string = PRODUCTS_ENDPOINT,
   ): Promise<T> => {
     const { documentId, page, pageSize = 9, category, searchQuery } = options;
+    if (endpoint === PRODUCTS_ENDPOINT && !documentId) {
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    }
     const url = documentId ? `${endpoint}/${documentId}` : endpoint;
 
     const queryParameters: QueryParameters = {
