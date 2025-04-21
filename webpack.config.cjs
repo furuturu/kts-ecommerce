@@ -37,7 +37,14 @@ const getSettingsForStyles = (withModules = false) => {
         },
       },
     },
-    "sass-loader",
+    {
+      loader: "sass-loader",
+      options: {
+        sassOptions: {
+          includePaths: [path.resolve(srcPath, "styles/scss/")],
+        },
+      },
+    },
   ];
 };
 
