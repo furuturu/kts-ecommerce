@@ -1,6 +1,16 @@
+@use "scss" as *;
+
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-left: 100px;
   margin-right: 100px;
+
+  @include tablet-l {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 
   .productLink {
     position: absolute;
@@ -9,26 +19,22 @@
   }
 
   .cardContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 30px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    justify-content: center;
 
-    .card {
-      flex: 0 0 360px;
-      max-width: 360px;
-
-      @media (max-width: 1199px) {
-        .card {
-          flex: 0 0 calc(50% - 15px); // 2 колонки с промежутком между ними
-        }
-      }
-
-      @media (max-width: 767px) {
-        .card {
-          flex: 0 0 100%; // 1 колонка
-        }
-      }
+    @include desktop-m {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
     }
+
+    @include tablet {
+      gap: 15px;
+    }
+  }
+
+  .card {
+    width: 100%;
   }
 }
