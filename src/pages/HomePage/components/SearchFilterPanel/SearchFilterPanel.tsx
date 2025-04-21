@@ -6,6 +6,8 @@ import MultiDropdown, { Option } from "components/MultiDropdown";
 import { observer } from "mobx-react-lite";
 import { CategoryStore } from "store/modules/CategoryStore.ts";
 import { ProductsStore } from "store/modules/ProductsStore.ts";
+import { reaction } from "mobx";
+import { ClearIcon } from "../../../../components/icons/ClearIcon/ClearIcon.tsx";
 
 interface SearchFilterPanelProps {
   categoriesStore: CategoryStore;
@@ -18,14 +20,19 @@ export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
       categoriesStore.getCategories();
     }, [categoriesStore]);
 
-    const [inputValue, setInputValue] = useState(productsStore.searchQuery);
+    const [inputValue, setInputValue] = useState("");
+
+    useEffect(() => {
+      const dispose = reaction(
+        () => productsStore.searchQuery,
+        (searchQuery) => setInputValue(searchQuery),
+      );
+      return () => dispose();
+    }, [productsStore]);
+
     const handleInputChange = (value: string) => {
       setInputValue(value);
     };
-
-    useEffect(() => {
-      setInputValue(productsStore.searchQuery);
-    }, [productsStore.searchQuery]);
 
     const categoryOptions = categoriesStore.categoryOptions;
 
@@ -50,14 +57,20 @@ export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
       productsStore.setSearchQuery(inputValue);
     };
 
+    const handleClearInput = () => {
+      productsStore.setSearchQuery("");
+    };
+
     return (
-      <div className={styles.container}>
+      <div className={styles.container} id={"searchFilterPanel"}>
         <form onSubmit={handleSubmit}>
           <Input
             className={styles.searchInput}
             value={inputValue}
             onChange={handleInputChange}
             placeholder={"Search product"}
+            afterSlot={<ClearIcon />}
+            handleClear={handleClearInput}
           />
           <Button className={styles.searchButton} type="submit">
             Find now
