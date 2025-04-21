@@ -3,7 +3,6 @@ import "./config/configureMobX.ts";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import "./styles/index.css";
-import "./styles/Roboto/fonts.css";
 
 const router = createBrowserRouter(routesConfig);
 
