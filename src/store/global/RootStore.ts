@@ -1,19 +1,9 @@
-import QueryParamsStore from "./QueryParamsStore.ts";
-import { makeObservable } from "mobx";
+import { QueryParamsStore } from "./QueryParamsStore.ts";
+import { ApiStore } from "./ApiStore.ts";
 
 export class RootStore {
   readonly query = new QueryParamsStore();
-
-  constructor() {
-    makeObservable(this);
-  }
-
-  init() {
-    if (typeof window !== "undefined") {
-      this.query.setSearch(window.location.search);
-    }
-  }
+  readonly api = new ApiStore();
 }
 
 export const rootStore = new RootStore();
-rootStore.init();

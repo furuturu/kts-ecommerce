@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
 
 export const MainLogo = () => (
-  <NavLink to="/" className="navbar__logo">
+  <NavLink to="/">
     <svg width="131" height="42" viewBox="0 0 131 42" fill="none">
       <g clipPath="url(#clip0_502_629)">
         <path d="M42 0H0V42H42V0Z" fill="#fff" />
