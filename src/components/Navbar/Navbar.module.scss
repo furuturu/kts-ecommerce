@@ -39,7 +39,7 @@
       display: none;
     }
   }
-//todo поправить полосочки чтобы ровненько под текстом
+
   .link {
     font-size: 18px;
     color: $text-primary;
@@ -48,29 +48,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     min-height: 90px;
-    min-width: 105px;
+    min-width: 107px;
     padding: $space-xxs;
     transition:
       color 0.3s,
       font-weight 0.3s;
     font-weight: 400;
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: $brand;
-      transition: width 0.3s;
-    }
-
-    &:hover::after,
-    &.linkActive::after {
-      width: 100%;
-    }
 
     &:hover {
       color: $brand;
@@ -81,6 +66,26 @@
       color: $brand;
       font-weight: 700;
     }
+  }
+
+  .linkText {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -35px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: $brand;
+      transition: width 0.3s;
+    }
+
+  }
+
+  .link:hover .linkText::after,
+  .linkActive .linkText::after {
+    width: 100%;
   }
 
   .icons {
@@ -102,16 +107,17 @@
     .iconSvg {
       width: 100%;
       height: 100%;
-      fill: #fff;
       transition: fill 0.3s;
     }
 
-   &:hover .iconSvg {
-     fill: $brand-hover
-   }
+    &:hover .iconSvg {
+      color: $brand-hover;
+      transition: color 0.3s;
+    }
 
     &.iconActive .iconSvg {
-      fill: $brand;
+      color: $brand;
+      transition: color 0.3s;
     }
   }
 

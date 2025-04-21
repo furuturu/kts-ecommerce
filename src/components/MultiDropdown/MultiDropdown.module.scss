@@ -1,15 +1,26 @@
 @use 'scss' as *;
 
 .multiDropdown {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
+
+  @include tablet {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 .dropdown {
   margin-top: $space-xxs;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   background-color: $dropdown-options-bg;
   box-shadow: $dropdown-shadow;
   position: absolute;
   z-index: $dropdown-z-index;
+
+  @include tablet {
+    max-width: 200px;
+  }
 
   .option {
     cursor: pointer;
@@ -22,7 +33,6 @@
   line-height: 20px;
   height: 48px;
   font-weight: 400;
-
 
   &:hover {
     cursor: pointer;
