@@ -1,6 +1,6 @@
 // https://lms.metaclass.kts.studio/lesson/165/unit/
 
-import { action, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import qs from "qs";
 
 type PrivateFields = "_parsedQueryParameters";
@@ -14,7 +14,9 @@ export class QueryParamsStore {
   constructor() {
     makeObservable<QueryParamsStore, PrivateFields>(this, {
       _parsedQueryParameters: observable.ref,
+      parsedQueryParameters: computed,
       setURLQueryParameters: action,
+      updateQueryParameters: action,
     });
   }
 
@@ -45,5 +47,40 @@ export class QueryParamsStore {
       this._initialURLQuery = normalizedURLQuery;
       this._parsedQueryParameters = qs.parse(normalizedURLQuery);
     }
+  }
+
+  updateQueryParameters(params: {
+    page: number;
+    search: string;
+    category: string;
+  }) {
+    const queryParams: Record<string, string> = {};
+
+    if (params.page > 1) {
+      queryParams.page = String(params.page);
+    }
+
+    if (params.search) {
+      queryParams.search = params.search;
+    }
+
+    if (params.category) {
+      queryParams.category = params.category;
+    }
+
+    const queryParamsString = new URLSearchParams(queryParams).toString();
+    const newUrl =
+      window.location.pathname +
+      (queryParamsString ? `?${queryParamsString}` : "");
+
+    if (window.location.href !== newUrl) {
+      window.history.pushState({}, "", newUrl);
+    }
+
+    this.setURLQueryParameters(queryParamsString);
+  }
+
+  get parsedQueryParameters() {
+    return this._parsedQueryParameters;
   }
 }

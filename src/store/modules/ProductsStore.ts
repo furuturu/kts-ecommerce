@@ -47,7 +47,6 @@ export class ProductsStore implements ILocalStore {
       setSelectedCategory: action,
       resetToFirstPage: action,
       initFromQueryParameters: action,
-      updateQueryParameters: action,
       destroy: action,
     });
   }
@@ -88,7 +87,11 @@ export class ProductsStore implements ILocalStore {
       runInAction(() => {
         this._data = data;
         this._currentPage = page;
-        this.updateQueryParameters();
+        this._rootStore.query.updateQueryParameters({
+          page: this._currentPage,
+          search: this._searchQuery,
+          category: this._selectedCategory,
+        });
       });
     } catch (error) {
       runInAction(() => {
@@ -124,34 +127,6 @@ export class ProductsStore implements ILocalStore {
 
     this._isInitialized = true;
     this.getProducts();
-  };
-
-  updateQueryParameters = () => {
-    const queryParams: Record<string, string> = {};
-    if (this._currentPage > 1) {
-      queryParams.page = String(this._currentPage);
-    }
-
-    if (this._searchQuery) {
-      queryParams.search = this._searchQuery;
-    }
-    if (this._selectedCategory) {
-      queryParams.category = this._selectedCategory;
-    }
-
-    const queryParamsParsedToString = new URLSearchParams(
-      queryParams,
-    ).toString();
-
-    const newUrl =
-      window.location.pathname +
-      (queryParamsParsedToString ? `?${queryParamsParsedToString}` : "");
-
-    if (window.location.pathname + window.location.search !== newUrl) {
-      window.history.pushState({}, "", newUrl);
-    }
-
-    this._rootStore.query.setURLQueryParameters(queryParamsParsedToString);
   };
 
   setPage = (page: number) => {
