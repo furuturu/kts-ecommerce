@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Input from "../Input";
 import style from "./MultiDropdown.module.scss";
 import classNames from "classnames";
+import { useClickOutside } from "hooks/useClickOutside.ts";
+import { motion, AnimatePresence } from "framer-motion";
 
 export type Option = {
   /** Ключ варианта, используется для отправки на бек/использования в коде */
@@ -35,27 +37,12 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownContainerRef = useRef<HTMLDivElement>(null);
+  const dropdownContainerRef = useClickOutside(() => setIsDropdownOpen(false));
 
   // Фильтрация опций по введенному тексту
   const filteredOptions = options.filter((option) =>
     option.value.toLowerCase().includes(inputValue.toLowerCase()),
   );
-
-  // Обработчик клика вне компонента
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownContainerRef.current &&
-        !dropdownContainerRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Обработчик выбора опции
   const handleOptionClick = (option: Option) => () => {
@@ -85,27 +72,49 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
         disabled={disabled}
         afterSlot={true}
       />
-
-      {isDropdownOpen && !disabled && (
-        <div className={style.dropdown}>
-          {filteredOptions.map((option) => {
-            const isSelected = value.some(
-              (selected) => selected.key === option.key,
-            );
-            return (
-              <div
-                key={option.key}
-                onClick={handleOptionClick(option)}
-                className={classNames(style.option, {
-                  [style.optionActive]: isSelected,
-                })}
-              >
-                {option.value}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <AnimatePresence>
+        {isDropdownOpen && !disabled && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              scaleY: 0,
+              transformOrigin: "top",
+            }}
+            animate={{
+              opacity: 1,
+              scaleY: 1,
+              transformOrigin: "top",
+            }}
+            exit={{
+              opacity: 0,
+              scaleY: 0,
+              transformOrigin: "top",
+            }}
+            transition={{
+              duration: 0.3,
+              ease: "easeIn",
+            }}
+            className={style.dropdown}
+          >
+            {filteredOptions.map((option) => {
+              const isSelected = value.some(
+                (selected) => selected.key === option.key,
+              );
+              return (
+                <div
+                  key={option.key}
+                  onClick={handleOptionClick(option)}
+                  className={classNames(style.option, {
+                    [style.optionActive]: isSelected,
+                  })}
+                >
+                  {option.value}
+                </div>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

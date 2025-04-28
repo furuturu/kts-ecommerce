@@ -10,6 +10,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require("dotenv-webpack");
 
 const TsCheckerPlugin = require("fork-ts-checker-webpack-plugin");
 
@@ -37,7 +38,14 @@ const getSettingsForStyles = (withModules = false) => {
         },
       },
     },
-    "sass-loader",
+    {
+      loader: "sass-loader",
+      options: {
+        sassOptions: {
+          includePaths: [path.resolve(srcPath, "styles/scss/")],
+        },
+      },
+    },
   ];
 };
 
@@ -101,6 +109,7 @@ module.exports = {
         filename: "[name]-[hash].css",
       }),
     new TsCheckerPlugin(),
+    new Dotenv(),
   ].filter(Boolean),
   resolve: {
     // теперь при импорте эти расширения файлов можно не указывать
@@ -116,6 +125,7 @@ module.exports = {
       store: path.join(srcPath, "store"),
       styles: path.join(srcPath, "styles"),
       types: path.join(srcPath, "types"),
+      utils: path.join(srcPath, "utils"),
       scss: path.join(srcPath, "styles/scss/_index.scss"),
     },
   },

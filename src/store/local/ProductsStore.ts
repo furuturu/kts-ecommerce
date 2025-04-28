@@ -6,7 +6,7 @@ import {
   computed,
 } from "mobx";
 import { ILocalStore, StrapiProductsListResponse } from "types/types.ts";
-import { rootStore, RootStore } from "../global/RootStore.ts";
+import { RootStore } from "../global/RootStore.ts";
 
 type PrivateFields =
   | "_data"
@@ -23,7 +23,7 @@ export class ProductsStore implements ILocalStore {
   private _currentPage = 1;
   private _searchQuery: string = "";
   private _selectedCategory: string = "";
-  private _rootStore: RootStore;
+  private readonly _rootStore: RootStore;
   private _isInitialized: boolean = false; // 100% защита от перерендеров
 
   constructor(rootStore: RootStore) {
@@ -46,8 +46,8 @@ export class ProductsStore implements ILocalStore {
       setSearchQuery: action,
       setSelectedCategory: action,
       resetToFirstPage: action,
+      resetAllFilters: action,
       initFromQueryParameters: action,
-      updateQueryParameters: action,
       destroy: action,
     });
   }
@@ -88,7 +88,11 @@ export class ProductsStore implements ILocalStore {
       runInAction(() => {
         this._data = data;
         this._currentPage = page;
-        this.updateQueryParameters();
+        this._rootStore.query.updateQueryParameters({
+          page: this._currentPage,
+          search: this._searchQuery,
+          category: this._selectedCategory,
+        });
       });
     } catch (error) {
       runInAction(() => {
@@ -102,13 +106,15 @@ export class ProductsStore implements ILocalStore {
   };
 
   initFromQueryParameters = () => {
-    if (this._isInitialized) return;
+    if (this._isInitialized || !this._rootStore) return;
 
-    const pageParam = this._rootStore.query.getParameterValue("page") as string;
-    const searchParam = this._rootStore.query.getParameterValue(
+    const pageParam = this._rootStore.query.getParsedParameterValue(
+      "page",
+    ) as string;
+    const searchParam = this._rootStore.query.getParsedParameterValue(
       "search",
     ) as string;
-    const categoryParam = this._rootStore.query.getParameterValue(
+    const categoryParam = this._rootStore.query.getParsedParameterValue(
       "category",
     ) as string;
 
@@ -124,34 +130,6 @@ export class ProductsStore implements ILocalStore {
 
     this._isInitialized = true;
     this.getProducts();
-  };
-
-  updateQueryParameters = () => {
-    const queryParams: Record<string, string> = {};
-    if (this._currentPage > 1) {
-      queryParams.page = String(this._currentPage);
-    }
-
-    if (this._searchQuery) {
-      queryParams.search = this._searchQuery;
-    }
-    if (this._selectedCategory) {
-      queryParams.category = this._selectedCategory;
-    }
-
-    const queryParamsParsedToString = new URLSearchParams(
-      queryParams,
-    ).toString();
-
-    const newUrl =
-      window.location.pathname +
-      (queryParamsParsedToString ? `?${queryParamsParsedToString}` : "");
-
-    if (window.location.pathname + window.location.search !== newUrl) {
-      window.history.pushState({}, "", newUrl);
-    }
-
-    this._rootStore.query.setURLQueryParameters(queryParamsParsedToString);
   };
 
   setPage = (page: number) => {
@@ -175,6 +153,13 @@ export class ProductsStore implements ILocalStore {
     this._currentPage = 1;
   };
 
+  resetAllFilters = () => {
+    this._searchQuery = "";
+    this._selectedCategory = "";
+    this.resetToFirstPage();
+    this.getProducts();
+  };
+
   destroy() {
     this._data = null;
     this._loading = false;
@@ -186,4 +171,5 @@ export class ProductsStore implements ILocalStore {
   }
 }
 
-export const createProductsStore = () => new ProductsStore(rootStore);
+export const createProductsStore = (rootStore: RootStore) =>
+  new ProductsStore(rootStore);

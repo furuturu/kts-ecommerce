@@ -1,0 +1,101 @@
+@use "scss" as *;
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 380px);
+  gap: $space-xxl;
+  padding: $space-xxl;
+  max-width: 1440px;
+  margin: 150px auto 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: $space-l;
+  }
+}
+
+.itemsContainer {
+  background-color: white;
+  border-radius: 12px;
+  padding: $space-xxl;
+
+  .header {
+    margin-bottom: $space-xl;
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: $space-s;
+
+    h2 {
+      font-size: 2rem;
+      margin: 0;
+    }
+  }
+
+  .itemsCountWrapper {
+    flex-grow: 1;
+  }
+
+  .itemsCount {
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-left: $space-xs;
+  }
+}
+
+.selectAllRow {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  min-height: 95px;
+  margin-bottom: $space-xl;
+  padding: $space-s 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  .selectAllCheckbox {
+    flex-shrink: 0;
+    border: 2px solid $brand-hover;
+    border-radius: 8px;
+  }
+
+  .selectAllLabel {
+    font-size: 0.875rem;
+  }
+
+  .trash {
+    background: none;
+    color: #111;
+    position: relative;
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    &:hover {
+      color: $brand-hover;
+    }
+
+    &:active {
+      color: $brand-active;
+    }
+  }
+
+  .selectAllNote {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    transition: opacity 0.2s;
+  }
+
+  .noteHidden {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 100px;
+    gap: $space-xl;
+  }
+}

@@ -1,0 +1,46 @@
+@use 'scss' as *;
+
+.container {
+  margin-top: 150px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+}
+
+.content {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: white;
+  position: relative;
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.divider {
+  height: 2px;
+  width: 80px;
+  background: $brand;
+  margin: 0 auto 2rem;
+}
+
+.text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: $text-secondary;
+  font-weight: 300;
+  position: relative;
+  margin: 0;
+}

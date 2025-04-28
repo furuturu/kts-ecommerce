@@ -1,0 +1,40 @@
+@use "scss" as *;
+
+.checkoutContainer {
+  .summarySticky {
+    position: sticky;
+    top: 130px; // Отступ от верхнего края
+    background: white;
+    padding: $space-l;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .summaryHeader {
+    margin-bottom: $space-xl;
+  }
+
+  .summaryLabel {
+    display: block;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: $space-xs;
+  }
+
+  .totalPrice {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  .totalPriceWrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkoutContainer .summarySticky {
+    position: static;
+    margin-bottom: $space-xxl;
+  }
+}

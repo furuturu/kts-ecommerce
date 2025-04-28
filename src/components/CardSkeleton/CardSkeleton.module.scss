@@ -1,0 +1,103 @@
+@use "scss" as *;
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  min-width: 380px;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonImage {
+  width: 100%;
+  height: auto;
+  padding-bottom: 100%;
+  aspect-ratio: 1/1;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.content {
+  padding: $space-xl $space-xs;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonText {
+  background: #f0f0f0;
+  width: 100%;
+  border-radius: 4px;
+  height: 1em;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+.caption {
+  width: 30%;
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.title {
+  width: 80%;
+  height: 24px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  width: 100%;
+  height: 16px;
+  margin-bottom: 6px;
+}
+
+.contentSlot {
+  width: 20%;
+  height: 1.2em;
+}
+
+.actionButton {
+  width: 24px;
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

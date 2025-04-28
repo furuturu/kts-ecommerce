@@ -1,13 +1,19 @@
-@use 'styles' as *;
+@use 'scss' as *;
 
 .container {
-  margin-bottom: 48px;
+  width: 100%;
+  max-width: 1240px;
+  margin-bottom: 56px;
 
   form {
     display: flex;
     gap: 24px;
     min-width: 100%;
     margin-bottom: 24px;
+
+    @include tablet-l {
+      flex-direction: column;
+    }
   }
 
   .searchInput {
@@ -18,3 +24,4 @@
     min-width: 137px;
   }
 }
+

@@ -19,7 +19,7 @@
       "hooks": ["hooks/*"],
       "types": ["types/*"],
       "services": ["services/*"],
-      "store": ["store/*"]
+      "store": ["store/*"],
     },
     "allowJs": true,
     "sourceMap": true,

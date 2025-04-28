@@ -8,3 +8,9 @@ export const strapi = axios.create({
   paramsSerializer: (parameters) =>
     qs.stringify(parameters, { encodeValuesOnly: true }),
 });
+
+export const strapiAuth = axios.create({
+  baseURL: API_BASE_URL,
+  paramsSerializer: (parameters) =>
+    qs.stringify(parameters, { encodeValuesOnly: true }),
+});

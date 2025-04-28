@@ -1,10 +1,16 @@
-import { Navbar } from "components/Navbar";
+import { Outlet, useLocation } from "react-router";
+import { AnimatePresence } from "framer-motion";
 
-//заглушка для разделов в разработке
 export const App = () => {
+  const location = useLocation();
+
   return (
-    <>
-      <Navbar />
-    </>
+    <div>
+      <AnimatePresence mode="wait" initial={false}>
+        <div key={location.pathname}>
+          <Outlet />
+        </div>
+      </AnimatePresence>
+    </div>
   );
 };

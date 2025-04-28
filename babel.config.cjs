@@ -8,12 +8,7 @@ module.exports = (api) => {
   ];
 
   const plugins = [
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        regenerator: true, // это вместо import "regenerator-runtime" в index.tsx для асинк эвейт
-      },
-    ],
+    ["@babel/plugin-transform-runtime", { regenerator: true }], // это вместо import "regenerator-runtime" в index.tsx для асинк эвейт
     "@babel/plugin-proposal-optional-chaining",
     ["@babel/plugin-proposal-decorators", { legacy: true }], // для mobx
     ["@babel/plugin-proposal-class-properties", { loose: true }], // для mobx
