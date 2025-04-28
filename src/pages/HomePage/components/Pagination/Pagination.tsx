@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Pagination.module.scss";
 import { usePagination } from "hooks/usePagination.ts";
-import { ArrowIcon } from "../ArrowIcon";
+import { ArrowIcon } from "components/icons/ArrowIcon";
 import cn from "classnames";
 
 interface PaginationProps {

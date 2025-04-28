@@ -12,8 +12,6 @@ export const usePagination = ({
   const getPageNumbers = useCallback(() => {
     const pages: (number | string)[] = [];
 
-    // todo: можно вынести максимальное количество показываемых страниц в пропсы и динамически менять
-    // но это имеет смысл только при изменении количества показываемых элементов
     if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);

@@ -65,9 +65,13 @@ export class CategoryStore implements ILocalStore {
         }
       });
     } catch (error) {
-      this._error = String(error);
+      runInAction(() => {
+        this._error = String(error);
+      });
     } finally {
-      this._loading = false;
+      runInAction(() => {
+        this._loading = false;
+      });
     }
   };
 
