@@ -2,7 +2,8 @@
 
 .wrapper {
   position: relative;
-  max-width: 360px;
+  width: 100%;
+  max-width: 100%;
   background-color: $card-bg;
   border-radius: 8px;
   overflow: hidden;
@@ -23,10 +24,12 @@
 }
 
 .content {
-  padding: $space-xl $space-xs;
+  padding: $space-xl $space-xs 108px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
+
 }
 
 .captionSlot {
@@ -57,9 +60,13 @@
   justify-content: space-between;
   align-items: center;
   margin-top: $space-xs;
+  position: absolute;
+  bottom: 40px;
+  left: $space-xs;
+  right: $space-xs;
 }
 
 .contentSlot {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 }

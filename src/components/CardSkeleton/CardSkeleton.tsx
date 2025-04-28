@@ -6,7 +6,7 @@ type CardSkeletonProps = {
   className?: string;
 };
 
-export const CardSkeleton: React.FC<CardSkeletonProps> = (className) => {
+export const CardSkeleton: React.FC<CardSkeletonProps> = ({ className }) => {
   return (
     <div className={cn(styles.wrapper, className)}>
       <div className={styles.skeletonImage} />

@@ -2,15 +2,19 @@
 
 .wrapper {
   position: relative;
-  min-width: 360px;
+  width: 100%;
+  min-width: 380px;
   background-color: #fff;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .skeletonImage {
   width: 100%;
   height: auto;
-  aspect-ratio: 1 / 1;
+  padding-bottom: 100%;
+  aspect-ratio: 1/1;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;

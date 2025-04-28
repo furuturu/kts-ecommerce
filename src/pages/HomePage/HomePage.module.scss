@@ -3,6 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  max-width: 1240px;
   align-items: center;
   margin-left: 100px;
   margin-right: 100px;
@@ -12,29 +13,68 @@
     margin-right: 20px;
   }
 
+  .navCardWrapper {
+    position: relative;
+  }
+
   .productLink {
     position: absolute;
-    inset: 0;
-    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 100px;
   }
 
   .cardContainer {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(360px, 1fr));
     gap: 30px;
-    justify-content: center;
+    width: 100%;
 
     @include desktop-m {
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      //grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
       gap: 20px;
     }
 
     @include tablet {
+      grid-template-columns: repeat(1, minmax(360px, 1fr));
       gap: 15px;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      margin: 0 auto;
     }
   }
 
-  .card {
-    width: 100%;
+  .isInCartWrapper {
+    display: flex;
+    gap: 10px;
+    margin-left: 5px;
+
+    .counter {
+      display: flex;
+      justify-content: space-evenly;
+      max-width: 150px;
+    }
+
+    .itemInCartButton {
+      background-color: #6eb595;
+    }
+  }
+
+
+
+
+  .totalProducts {
+    position: relative;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: $space-m;
+    margin-bottom: 43px;
   }
 }
