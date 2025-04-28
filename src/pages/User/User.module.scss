@@ -1,0 +1,109 @@
+@use 'scss' as *;
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  padding: $space-xl;
+
+  .switchFormButton {
+    border: none;
+    cursor: pointer;
+    margin-top: $space-s;
+  }
+}
+
+.profile {
+  text-align: center;
+
+  .profileTitle {
+    margin-bottom: $space-l;
+    color: $brand;
+  }
+
+  .profileButton {
+    padding: $space-xs $space-l;
+    background-color: $brand;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: $brand-hover;
+    }
+
+    &:active {
+      background-color: $brand-active;
+    }
+  }
+}
+
+.form {
+  background: white;
+  padding: $space-xl;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  align-content: center;
+  text-align: center;
+
+  & > div {
+    margin-bottom: $space-l;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: $space-xs;
+  font-weight: 500;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: $space-xs;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: $brand;
+    box-shadow: 0 0 0 2px rgba($brand, 0.1);
+  }
+}
+
+.profileButton {
+  width: 100%;
+  padding: $space-s;
+  background-color: $brand;
+  max-width: 350px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $brand-hover;
+  }
+
+  &:active {
+    background-color: $brand-active;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+}
