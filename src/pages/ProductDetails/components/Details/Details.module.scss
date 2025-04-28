@@ -72,6 +72,7 @@
 }
 
 .buttonCart {
+  position: relative;
   background-color: #fff;
   border: 1px solid $text-secondary;
   color: $text-primary;
@@ -80,4 +81,13 @@
     background-color: $button-primary-bg-hover;
   }
 }
+.buttonBuy {
+  position: relative;
 
+}
+
+.buttonLink {
+  position: absolute;
+  inset: 0;
+  align-content: center;
+}
