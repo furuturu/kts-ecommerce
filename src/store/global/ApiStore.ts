@@ -10,6 +10,7 @@ export class ApiStore {
       fetchProducts: action,
       fetchProductCategories: action,
       fetchProductDetails: action,
+      fetchCartProducts: action,
     });
   }
 
@@ -24,7 +25,7 @@ export class ApiStore {
   ): Promise<T> => {
     const { documentId, page, pageSize = 9, category, searchQuery } = options;
     if (endpoint === PRODUCTS_ENDPOINT && !documentId) {
-      await new Promise((resolve) => setTimeout(resolve, 700));
+      await new Promise((resolve) => setTimeout(resolve, 600));
     }
     const url = documentId ? `${endpoint}/${documentId}` : endpoint;
 
@@ -67,5 +68,21 @@ export class ApiStore {
     category: string,
   ): Promise<T> {
     return this._fetchFromStrapi<T>({ page, searchQuery, category });
+  }
+
+  async fetchRelatedProducts<T>(category: string): Promise<T> {
+    return this._fetchFromStrapi<T>({ category });
+  }
+
+  async fetchCartProducts<T>(ids: string[]): Promise<T> {
+    const query = {
+      filters: {
+        documentId: { $in: ids },
+      },
+      populate: ["images"],
+    };
+
+    const response = await strapi.get(PRODUCTS_ENDPOINT, { params: query });
+    return response.data.data;
   }
 }
