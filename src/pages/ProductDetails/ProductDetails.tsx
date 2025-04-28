@@ -1,19 +1,20 @@
 import { Navbar } from "components/Navbar";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import Loader from "components/Loader";
 import Text from "components/Text";
 import styles from "./ProductDetails.module.scss";
 import { Details } from "./components/Details";
 import { RelatedItems } from "./components/RelatedItems";
-import { GoBack } from "./components/GoBack/GoBack.tsx";
+import { GoBack } from "./components/GoBack";
 import { useCallback, useEffect } from "react";
-import { createProductDetailsStore } from "store/modules/ProductDetailsStore.ts";
+import { createProductDetailsStore } from "store/local/ProductDetailsStore.ts";
 import { observer } from "mobx-react-lite";
 import { useLocalStore } from "hooks/useLocalStore.ts";
+import { PageTransition } from "components/PageTransition/PageTransition.tsx";
+import { rootStore } from "../../store/global/RootStore.ts";
 
 export const ProductDetails = observer(() => {
   const { documentId = "" } = useParams();
-  const navigate = useNavigate();
   const productDetailsStore = useLocalStore(createProductDetailsStore);
   const { product, loading, error } = productDetailsStore;
 
@@ -21,22 +22,25 @@ export const ProductDetails = observer(() => {
     productDetailsStore.getProductDetails(documentId);
   }, [documentId, productDetailsStore]);
 
-  const handleBackClick = useCallback(() => navigate(-1), [navigate]);
+  const handleBackClick = useCallback(() => {
+    rootStore.query.navigateBack();
+  }, []);
 
   return (
-    <>
+    <PageTransition>
       <Navbar />
       <div className={styles.container}>
         <GoBack handleBackClick={handleBackClick} />
-        {loading && <Loader size="l" />}
-        {error && <Text tag="h1">{error}</Text>}
+
         {product && (
           <>
-            <Details product={product} />{" "}
-            <RelatedItems productCategory={product.productCategory} />
+            <Details product={product} />
+            <RelatedItems productDetailsStore={productDetailsStore} />
           </>
         )}
+        {loading && <Loader size="l" />}
+        {error && <Text tag="h1">{error}</Text>}
       </div>
-    </>
+    </PageTransition>
   );
 });
