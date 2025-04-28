@@ -1,0 +1,37 @@
+@use 'scss' as *;
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  justify-content: center;
+
+  @include desktop-m {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  @include tablet {
+    gap: 15px;
+  }
+}
+
+.navCardWrapper {
+  position: relative;
+
+  .cardLink {
+    position: absolute;
+    inset: 0;
+  }
+
+  .relatedProduct {
+    height: 100%;
+  }
+}
+
+.relatedTitle {
+  font-size: 32px;
+  margin-bottom: 32px;
+}
+
+
