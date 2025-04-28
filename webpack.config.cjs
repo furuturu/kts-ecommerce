@@ -56,7 +56,7 @@ module.exports = {
   output: {
     path: buildPath,
     filename: "bundle.js",
-    publicPath: "/kts-ecommerce/",
+    publicPath: "/",
   },
   module: {
     rules: [
@@ -125,6 +125,7 @@ module.exports = {
       store: path.join(srcPath, "store"),
       styles: path.join(srcPath, "styles"),
       types: path.join(srcPath, "types"),
+      utils: path.join(srcPath, "utils"),
       scss: path.join(srcPath, "styles/scss/_index.scss"),
     },
   },

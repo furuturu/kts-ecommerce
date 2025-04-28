@@ -3,6 +3,11 @@ export interface ProductImage {
   documentId: string;
   name: string;
   url: string;
+  formats: {
+    small: {
+      url: string;
+    };
+  };
 }
 
 export interface ProductCategory {
