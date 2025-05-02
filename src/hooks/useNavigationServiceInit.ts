@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-import { rootStore } from "../store/global/RootStore.ts";
+import { rootStore } from "store/global/RootStore.ts";
 
 export const useNavigationServiceInit = (): void => {
   const navigate = useNavigate();
