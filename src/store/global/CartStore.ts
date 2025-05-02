@@ -32,6 +32,7 @@ export class CartStore {
       addItem: action,
       removeItem: action,
       updateQuantity: action,
+      _handleStorageChange: action,
       clearCart: action,
 
       totalItems: computed,
@@ -54,11 +55,11 @@ export class CartStore {
     );
 
     if (typeof window !== "undefined") {
-      window.addEventListener("storage", this.handleStorageChange);
+      window.addEventListener("storage", this._handleStorageChange);
     }
   }
 
-  private handleStorageChange = (event: StorageEvent) => {
+  _handleStorageChange = (event: StorageEvent) => {
     if (event.key === "cart" && event.newValue) {
       try {
         this._items = JSON.parse(event.newValue);
@@ -203,7 +204,7 @@ export class CartStore {
 
   destroy() {
     if (typeof window !== "undefined") {
-      window.removeEventListener("storage", this.handleStorageChange);
+      window.removeEventListener("storage", this._handleStorageChange);
     }
     this._reactionDisposer();
   }
