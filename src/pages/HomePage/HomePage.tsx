@@ -87,118 +87,122 @@ export const HomePage: React.FC = observer(() => {
 
   return (
     <PageTransition>
-      <Navbar handleFiltersReset={handleFiltersReset} />
-      <div className={styles.container}>
-        <TitleDescription />
-        <SearchFilterPanel
-          categoriesStore={categoriesStore}
-          productsStore={productStore}
-        />
-        <div className={styles.totalProducts}>
-          <Text
-            tag={"h2"}
-            weight={"bold"}
-            className={styles.totalProductsTitle}
-          >
-            Total products
-          </Text>
-          <Text
-            tag={"span"}
-            weight={"bold"}
-            color={"accent"}
-            className={styles.totalProductsQuantity}
-          >
-            {data?.meta.pagination.total}
-          </Text>
-        </div>
-        <AnimatePresence mode={"wait"} custom={direction}>
-          <motion.div
-            key={currentPage}
-            custom={direction}
-            variants={animationVariants}
-            initial={"initial"}
-            animate={"center"}
-            exit={"exit"}
-            transition={{ duration: 0.5 }}
-          >
-            <div className={styles.cardContainer}>
-              {loading &&
-                Array.from({ length: 6 }, () => Math.random()).map(
-                  (skeleton) => (
-                    <CardSkeleton key={skeleton} className={styles.card} />
-                  ),
-                )}
-
-              {data &&
-                !loading &&
-                !error &&
-                data.data?.map((product) => (
-                  <div
-                    className={styles.navCardWrapper}
-                    key={product.id}
-                    id={`${product.documentId}`}
-                    onClick={handleSaveQuery}
-                  >
-                    <Card
-                      className={styles.card}
-                      captionSlot={product.title}
-                      image={product.images[0].url}
-                      subtitle={product.description}
-                      title={product.title}
-                      contentSlot={`$${product.price}`}
-                      actionSlot={
-                        isInCart(product.documentId) ? (
-                          <div className={styles.isInCartWrapper}>
-                            <Button
-                              onClick={handleNavigateToCart}
-                              className={styles.itemInCartButton}
-                            >
-                              Move to Cart
-                            </Button>
-                            <Counter
-                              value={cart?.getItemQuantityById(
-                                product.documentId,
-                              )}
-                              onChange={handleUpdateQuantity(
-                                product.documentId,
-                              )}
-                              onRemove={handleRemoveFromCart(
-                                product.documentId,
-                              )}
-                              removeIcon={trashIcon}
-                              className={styles.counter}
-                            />
-                          </div>
-                        ) : (
-                          <Button onClick={handleAddToCart(product.documentId)}>
-                            Add to Cart
-                          </Button>
-                        )
-                      }
-                    />
-                    <NavLink
-                      to={`/products/${product.documentId}`}
-                      key={product.documentId}
-                      className={styles.productLink}
-                    />
-                  </div>
-                ))}
-            </div>
-          </motion.div>
-        </AnimatePresence>
-        {error && <Text tag="h1">{error}</Text>}
-        {data?.data?.length === 0 && !loading && (
-          <Text tag="h3">
-            Ничего не найдено. Попробуйте изменить параметры поиска.
-          </Text>
-        )}
-        {data && !loading && !error && data?.data?.length !== 0 && (
-          <Pagination
-            totalPages={data.meta?.pagination.pageCount}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+      <div className={styles.megaContainer}>
+        <Navbar handleFiltersReset={handleFiltersReset} />
+        <div className={styles.container}>
+          <TitleDescription />
+          <SearchFilterPanel
+            categoriesStore={categoriesStore}
+            productsStore={productStore}
           />
-        )}
+          <div className={styles.totalProducts}>
+            <Text
+              tag={"h2"}
+              weight={"bold"}
+              className={styles.totalProductsTitle}
+            >
+              Total products
+            </Text>
+            <Text
+              tag={"span"}
+              weight={"bold"}
+              color={"accent"}
+              className={styles.totalProductsQuantity}
+            >
+              {data?.meta.pagination.total}
+            </Text>
+          </div>
+          <AnimatePresence mode={"wait"} custom={direction}>
+            <motion.div
+              key={currentPage}
+              custom={direction}
+              variants={animationVariants}
+              initial={"initial"}
+              animate={"center"}
+              exit={"exit"}
+              transition={{ duration: 0.5 }}
+            >
+              <div className={styles.cardContainer}>
+                {loading &&
+                  Array.from({ length: 6 }, () => Math.random()).map(
+                    (skeleton) => (
+                      <CardSkeleton key={skeleton} className={styles.card} />
+                    ),
+                  )}
+
+                {data &&
+                  !loading &&
+                  !error &&
+                  data.data?.map((product) => (
+                    <div
+                      className={styles.navCardWrapper}
+                      key={product.id}
+                      id={`${product.documentId}`}
+                      onClick={handleSaveQuery}
+                    >
+                      <Card
+                        className={styles.card}
+                        captionSlot={product.title}
+                        image={product.images[0].url}
+                        subtitle={product.description}
+                        title={product.title}
+                        contentSlot={`$${product.price}`}
+                        actionSlot={
+                          isInCart(product.documentId) ? (
+                            <div className={styles.isInCartWrapper}>
+                              <Button
+                                onClick={handleNavigateToCart}
+                                className={styles.itemInCartButton}
+                              >
+                                Move to Cart
+                              </Button>
+                              <Counter
+                                value={cart?.getItemQuantityById(
+                                  product.documentId,
+                                )}
+                                onChange={handleUpdateQuantity(
+                                  product.documentId,
+                                )}
+                                onRemove={handleRemoveFromCart(
+                                  product.documentId,
+                                )}
+                                removeIcon={trashIcon}
+                                className={styles.counter}
+                              />
+                            </div>
+                          ) : (
+                            <Button
+                              onClick={handleAddToCart(product.documentId)}
+                            >
+                              Add to Cart
+                            </Button>
+                          )
+                        }
+                      />
+                      <NavLink
+                        to={`/products/${product.documentId}`}
+                        key={product.documentId}
+                        className={styles.productLink}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+          {error && <Text tag="h1">{error}</Text>}
+          {data?.data?.length === 0 && !loading && (
+            <Text tag="h3">
+              Ничего не найдено. Попробуйте изменить параметры поиска.
+            </Text>
+          )}
+          {data && !loading && !error && data?.data?.length !== 0 && (
+            <Pagination
+              totalPages={data.meta?.pagination.pageCount}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </div>
       </div>
     </PageTransition>
   );
