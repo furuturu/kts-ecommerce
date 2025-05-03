@@ -55,18 +55,18 @@ export const Categories: React.FC = observer(() => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1 }}
+                  className={style.navCard}
                 >
                   <Card
                     image={category.image.url}
                     title={category.title}
                     subtitle={""}
                     className={style.category}
-                  >
-                    <NavLink
-                      to={`/?category=${category.id}`}
-                      className={style.categoryLink}
-                    />
-                  </Card>
+                  />
+                  <NavLink
+                    to={`/?category=${category.id}`}
+                    className={style.categoryLink}
+                  />
                 </motion.div>
               ))}
             </motion.div>

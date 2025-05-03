@@ -13,11 +13,20 @@
     margin-right: 20px;
   }
 
-  .categoryLink {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
+  .navCard {
+    position: relative;
+
+    .categoryLink {
+      position: absolute;
+      inset: 0;
+    }
+
+    .category {
+      text-align: center;
+    }
   }
+
+
 
   .categoriesContainer {
     display: grid;
@@ -33,11 +42,5 @@
     @include tablet {
       gap: 15px;
     }
-
-  }
-
-  .category {
-
-    text-align: center;
   }
 }
