@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import { observer } from "mobx-react-lite";
-import { rootStore } from "store/global/RootStore.ts";
 import { NavLink } from "react-router";
 import cn from "classnames";
 import { CartIcon } from "../icons/CartIcon.tsx";
 import styles from "../Navbar.module.scss";
+import { useCartStore } from "hooks/store/useCartStore.ts";
 
 export const CartIconCounter: React.FC = observer(() => {
-  const quantity = rootStore.cart.items.length;
+  const { items } = useCartStore();
+  const quantity = items.length;
   const [animate, setAnimate] = useState(false);
   const prevQuantityRef = useRef(quantity);
 

@@ -7,24 +7,24 @@ import { Details } from "./components/Details";
 import { RelatedItems } from "./components/RelatedItems";
 import { GoBack } from "./components/GoBack";
 import { useCallback, useEffect } from "react";
-import { createProductDetailsStore } from "store/local/ProductDetailsStore.ts";
 import { observer } from "mobx-react-lite";
-import { useLocalStore } from "hooks/useLocalStore.ts";
 import { PageTransition } from "components/PageTransition/PageTransition.tsx";
-import { rootStore } from "../../store/global/RootStore.ts";
+import { useRootStore } from "hooks/store/useRootStore.ts";
+import { useProductDetails } from "hooks/store/useProductDetails.ts";
 
 export const ProductDetails = observer(() => {
+  const rootStore = useRootStore();
   const { documentId = "" } = useParams();
-  const productDetailsStore = useLocalStore(createProductDetailsStore);
-  const { product, loading, error } = productDetailsStore;
+  const { product, loading, error, getProductDetails, store } =
+    useProductDetails();
 
   useEffect(() => {
-    productDetailsStore.getProductDetails(documentId);
-  }, [documentId, productDetailsStore]);
+    getProductDetails(documentId);
+  }, [getProductDetails, documentId]);
 
   const handleBackClick = useCallback(() => {
     rootStore.query.navigateBack();
-  }, []);
+  }, [rootStore.query]);
 
   return (
     <PageTransition>
@@ -35,7 +35,7 @@ export const ProductDetails = observer(() => {
         {product && (
           <>
             <Details product={product} />
-            <RelatedItems productDetailsStore={productDetailsStore} />
+            <RelatedItems productDetailsStore={store} />
           </>
         )}
         {loading && <Loader size="l" />}

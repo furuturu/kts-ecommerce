@@ -7,7 +7,7 @@ import {
   reaction,
   runInAction,
 } from "mobx";
-import { rootStore, RootStore } from "../global/RootStore.ts";
+import { RootStore } from "../global/RootStore.ts";
 import { ILocalStore, SingleProduct } from "types/types.ts";
 
 type PrivateFields = "_products" | "_loading" | "_error";
@@ -97,4 +97,5 @@ export class CartProductsStore implements ILocalStore {
   }
 }
 
-export const createCartProductsStore = () => new CartProductsStore(rootStore);
+export const createCartProductsStore = (rootStore: RootStore) =>
+  new CartProductsStore(rootStore);

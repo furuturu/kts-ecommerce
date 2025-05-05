@@ -1,34 +1,37 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
-import { rootStore } from "store/global/RootStore.ts";
 import style from "./CartProduct.module.scss";
 import CheckBox from "components/CheckBox";
 import Text from "components/Text";
 import { SingleProduct } from "types/types.ts";
 import { Counter } from "components/Counter/Counter.tsx";
 import { trashIcon } from "components/icons/TrashIcon/TrashIcon.tsx";
+import { useCartStore } from "hooks/store/useCartStore.ts";
 
 interface CartProductProps {
   product: SingleProduct;
 }
 export const CartProduct: React.FC<CartProductProps> = observer(
   ({ product }) => {
+    const {
+      getItemQuantityById,
+      isProductSelected,
+      toggleItemSelection,
+      updateQuantity,
+      removeItem,
+    } = useCartStore();
     const id = product.documentId;
-    const quantity = rootStore.cart.getItemQuantityById(id);
+    const quantity = getItemQuantityById(id);
 
-    const handleCheckBoxClick = () => {
-      rootStore.cart.toggleItemSelection(id);
-    };
+    const handleCheckBoxClick = () => toggleItemSelection(id);
 
-    const isProductSelected = rootStore.cart.isProductSelected(id);
+    const isSelected = isProductSelected(id);
 
     const handleQuantityChange = (newQuantity: number) => {
-      rootStore.cart.updateQuantity(id, newQuantity);
+      updateQuantity(id, newQuantity);
     };
 
-    const handleRemoveItem = () => {
-      rootStore.cart.removeItem(id);
-    };
+    const handleRemoveItem = () => removeItem(id);
 
     return (
       <>
@@ -36,7 +39,7 @@ export const CartProduct: React.FC<CartProductProps> = observer(
           <div className={style.itemImageWrapper}>
             <CheckBox
               onChange={handleCheckBoxClick}
-              checked={isProductSelected}
+              checked={isSelected}
               className={style.itemCheckbox}
               size={"small"}
             />

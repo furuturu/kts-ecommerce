@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Input from "../Input";
 import style from "./MultiDropdown.module.scss";
 import classNames from "classnames";
-import { useClickOutside } from "hooks/useClickOutside.ts";
+import { useClickOutside } from "hooks/ui/useClickOutside.ts";
 import { motion, AnimatePresence } from "framer-motion";
 
 export type Option = {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import cn from "classnames";
 import styles from "./Navbar.module.scss";
 import { MainLogo } from "./icons/MainLogo.tsx";
-import { useClickOutside } from "hooks/useClickOutside.ts";
+import { useClickOutside } from "hooks/ui/useClickOutside.ts";
 import { NavbarIcons } from "./components/NavbarIcons.tsx";
 import { NavbarLinks } from "./components/NavbarLinks.tsx";
 

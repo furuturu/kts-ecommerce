@@ -10,7 +10,7 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import { rootStore, RootStore } from "../global/RootStore.ts";
+import { RootStore } from "../global/RootStore.ts";
 
 type PrivateFields = "_categories" | "_images" | "_loading" | "_error";
 
@@ -93,4 +93,5 @@ export class CategoryStore implements ILocalStore {
   };
 }
 
-export const createCategoriesStore = () => new CategoryStore(rootStore);
+export const createCategoriesStore = (rootStore: RootStore) =>
+  new CategoryStore(rootStore);

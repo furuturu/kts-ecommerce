@@ -5,57 +5,58 @@ import { TitleDescription } from "./components/TitleDescription";
 import { SearchFilterPanel } from "./components/SearchFilterPanel";
 import Card from "components/Card";
 import Text from "components/Text";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { Pagination } from "./components/Pagination";
 import { observer } from "mobx-react-lite";
-import { useLocalStore } from "hooks/useLocalStore.ts";
-import { createProductsStore } from "store/local/ProductsStore.ts";
-import { createCategoriesStore } from "store/local/CategoryStore.ts";
-import { useQueryParamsStoreInit } from "hooks/useQueryParamsStoreInit.ts";
 import { motion, AnimatePresence, TargetAndTransition } from "framer-motion";
 import { CardSkeleton } from "components/CardSkeleton";
 import Button from "components/Button";
-import { rootStore } from "store/global/RootStore.ts";
-import { useNavigationServiceInit } from "hooks/useNavigationServiceInit.ts";
 import { Counter } from "components/Counter/Counter.tsx";
 import { trashIcon } from "components/icons/TrashIcon/TrashIcon.tsx";
 import { PageTransition } from "components/PageTransition";
+import { useProductStore } from "hooks/store/useProducts.ts";
+import { useCartStore } from "../../hooks/store/useCartStore.ts";
+import { useRootStore } from "../../hooks/store/useRootStore.ts";
 
 type AnimationDirection = "forward" | "backward";
 
 export const HomePage: React.FC = observer(() => {
-  useQueryParamsStoreInit();
-  useNavigationServiceInit();
+  const {
+    data,
+    error,
+    currentPage,
+    loading,
+    resetAllFilters,
+    initFromQueryParameters,
+    setPage,
+    pagination,
+    store,
+  } = useProductStore();
+  const {
+    checkIfProductIsInCart,
+    addItem,
+    updateQuantity,
+    removeItem,
+    getItemQuantityById,
+  } = useCartStore();
+  const navigate = useNavigate();
+  const rootStore = useRootStore();
 
-  const productStore = useLocalStore(() => createProductsStore(rootStore));
-  const categoriesStore = useLocalStore(createCategoriesStore);
   useEffect(() => {
-    productStore.initFromQueryParameters();
-  }, [productStore]);
-  const { data, error, currentPage, loading } = productStore;
+    initFromQueryParameters();
+  }, [initFromQueryParameters]);
 
-  const handleFiltersReset = () => {
-    productStore.resetAllFilters();
-  };
+  const handleFiltersReset = () => resetAllFilters();
 
-  const cart = rootStore?.cart;
   const handleAddToCart = (productId: string) => () => {
-    cart?.addItem(productId);
+    addItem(productId);
   };
-  const isInCart = (id: string) => cart?.checkIfProductIsInCart(id);
-  const handleNavigateToCart = () => {
-    rootStore.navigation.navigateTo("/cart");
-  };
-  const handleUpdateQuantity = (id: string) => (quantity: number) => {
-    return cart?.updateQuantity(id, quantity);
-  };
-  const handleRemoveFromCart = (id: string) => () => {
-    cart?.removeItem(id);
-  };
-
-  const handleSaveQuery = () => {
-    rootStore.query.savePreviousQueryParams();
-  };
+  const isInCart = (id: string) => checkIfProductIsInCart(id);
+  const handleNavigateToCart = () => navigate("/cart");
+  const handleUpdateQuantity = (id: string) => (quantity: number) =>
+    updateQuantity(id, quantity);
+  const handleRemoveFromCart = (id: string) => () => removeItem(id);
+  const handleSaveQuery = () => rootStore.query.savePreviousQueryParams();
 
   const [direction, setDirection] = useState<AnimationDirection>("forward");
   const handlePageChange = useCallback(
@@ -65,10 +66,10 @@ export const HomePage: React.FC = observer(() => {
       } else {
         setDirection("backward");
       }
-      productStore.setPage(page);
+      setPage(page);
       document.getElementById("searchFilterPanel")?.scrollIntoView();
     },
-    [productStore, currentPage],
+    [setPage, currentPage],
   );
   const animationVariants = {
     initial: (direction: AnimationDirection): TargetAndTransition => ({
@@ -91,10 +92,7 @@ export const HomePage: React.FC = observer(() => {
         <Navbar handleFiltersReset={handleFiltersReset} />
         <div className={styles.container}>
           <TitleDescription />
-          <SearchFilterPanel
-            categoriesStore={categoriesStore}
-            productsStore={productStore}
-          />
+          <SearchFilterPanel productsStore={store} />
           <div className={styles.totalProducts}>
             <Text
               tag={"h2"}
@@ -109,7 +107,7 @@ export const HomePage: React.FC = observer(() => {
               color={"accent"}
               className={styles.totalProductsQuantity}
             >
-              {data?.meta.pagination.total}
+              {pagination?.total}
             </Text>
           </div>
           <AnimatePresence mode={"wait"} custom={direction}>
@@ -133,7 +131,7 @@ export const HomePage: React.FC = observer(() => {
                 {data &&
                   !loading &&
                   !error &&
-                  data.data?.map((product) => (
+                  data.map((product) => (
                     <div
                       className={styles.navCardWrapper}
                       key={product.id}
@@ -157,9 +155,7 @@ export const HomePage: React.FC = observer(() => {
                                 Move to Cart
                               </Button>
                               <Counter
-                                value={cart?.getItemQuantityById(
-                                  product.documentId,
-                                )}
+                                value={getItemQuantityById(product.documentId)}
                                 onChange={handleUpdateQuantity(
                                   product.documentId,
                                 )}
@@ -190,14 +186,14 @@ export const HomePage: React.FC = observer(() => {
             </motion.div>
           </AnimatePresence>
           {error && <Text tag="h1">{error}</Text>}
-          {data?.data?.length === 0 && !loading && (
+          {data?.length === 0 && !loading && (
             <Text tag="h3">
               Ничего не найдено. Попробуйте изменить параметры поиска.
             </Text>
           )}
-          {data && !loading && !error && data?.data?.length !== 0 && (
+          {data && !loading && !error && data?.length !== 0 && pagination && (
             <Pagination
-              totalPages={data.meta?.pagination.pageCount}
+              totalPages={pagination.pageCount}
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />

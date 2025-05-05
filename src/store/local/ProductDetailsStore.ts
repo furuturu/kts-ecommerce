@@ -11,7 +11,7 @@ import {
   StrapiProductsListResponse,
 } from "types/types.ts";
 import { ILocalStore } from "types/types.ts";
-import { rootStore, RootStore } from "../global/RootStore.ts";
+import { RootStore } from "../global/RootStore.ts";
 
 type PrivateFields = "_product" | "_loading" | "_error" | "_relatedProducts";
 
@@ -108,5 +108,5 @@ export class ProductDetailsStore implements ILocalStore {
   }
 }
 
-export const createProductDetailsStore = () =>
+export const createProductDetailsStore = (rootStore: RootStore) =>
   new ProductDetailsStore(rootStore);
