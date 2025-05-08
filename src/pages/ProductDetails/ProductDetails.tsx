@@ -13,7 +13,7 @@ import { useRootStore } from "hooks/store/useRootStore.ts";
 import { useProductDetails } from "hooks/store/useProductDetails.ts";
 
 export const ProductDetails = observer(() => {
-  const rootStore = useRootStore();
+  const { query } = useRootStore();
   const { documentId = "" } = useParams();
   const { product, loading, error, getProductDetails, store } =
     useProductDetails();
@@ -23,8 +23,8 @@ export const ProductDetails = observer(() => {
   }, [getProductDetails, documentId]);
 
   const handleBackClick = useCallback(() => {
-    rootStore.query.navigateBack();
-  }, [rootStore.query]);
+    query.navigateBack();
+  }, [query]);
 
   return (
     <PageTransition>
