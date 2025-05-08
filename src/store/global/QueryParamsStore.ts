@@ -29,6 +29,7 @@ export class QueryParamsStore {
       parsedQueryParameters: computed,
       setURLQueryParameters: action,
       savePreviousQueryParams: action,
+      navigateBack: action,
     });
   }
 
