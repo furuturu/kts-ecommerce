@@ -12,6 +12,8 @@ import {
 } from "types/types.ts";
 import { ILocalStore } from "types/types.ts";
 import { RootStore } from "../global/RootStore.ts";
+import { ApiError } from "../../types/error.ts";
+import { handleError } from "../../utils/handleError.ts";
 
 type PrivateFields = "_product" | "_loading" | "_error" | "_relatedProducts";
 
@@ -19,7 +21,7 @@ export class ProductDetailsStore implements ILocalStore {
   private _product: SingleProduct | null = null;
   private _relatedProducts: StrapiProductsListResponse | null = null;
   private _loading: boolean = false;
-  private _error: string | null = null;
+  private _error: ApiError | null = null;
   private _rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -47,8 +49,8 @@ export class ProductDetailsStore implements ILocalStore {
     return this._loading;
   }
 
-  get error(): string | null {
-    return this._error;
+  get error(): string | undefined {
+    return this._error?.message;
   }
 
   get relatedProducts(): StrapiProductsListResponse | null {
@@ -67,7 +69,7 @@ export class ProductDetailsStore implements ILocalStore {
       });
     } catch (error) {
       runInAction(() => {
-        this._error = String(error);
+        this._error = handleError(error);
       });
     } finally {
       runInAction(() => {
@@ -90,7 +92,7 @@ export class ProductDetailsStore implements ILocalStore {
       });
     } catch (error) {
       runInAction(() => {
-        this._error = String(error);
+        this._error = handleError(error);
       });
     } finally {
       runInAction(() => {

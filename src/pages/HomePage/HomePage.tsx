@@ -53,28 +53,30 @@ export const HomePage: React.FC = observer(() => {
         <div className={styles.container}>
           <TitleDescription />
           <SearchFilterPanel productsStore={store} />
-          <div className={styles.totalProducts}>
-            <Text
-              tag={"h2"}
-              weight={"bold"}
-              className={styles.totalProductsTitle}
-            >
-              Total products
-            </Text>
-            <Text
-              tag={"span"}
-              weight={"bold"}
-              color={"accent"}
-              className={styles.totalProductsQuantity}
-            >
-              {pagination?.total}
-            </Text>
-          </div>
+          {!error && data && (
+            <div className={styles.totalProducts}>
+              <Text
+                tag={"h2"}
+                weight={"bold"}
+                className={styles.totalProductsTitle}
+              >
+                Total products
+              </Text>
+              <Text
+                tag={"span"}
+                weight={"bold"}
+                color={"accent"}
+                className={styles.totalProductsQuantity}
+              >
+                {pagination?.total}
+              </Text>
+            </div>
+          )}
           <PageAnimation direction={direction} currentPage={currentPage}>
             <ProductGrid productStore={store} />
           </PageAnimation>
           {error && <Text tag="h1">{error}</Text>}
-          {data?.length === 0 && !loading && (
+          {data?.length === 0 && !loading && !error && (
             <Text tag="h3">
               Ничего не найдено. Попробуйте изменить параметры поиска.
             </Text>

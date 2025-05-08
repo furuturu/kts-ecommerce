@@ -4,7 +4,7 @@ import styles from "../User.module.scss";
 
 interface LoginProps {
   loading: boolean;
-  error: string | null;
+  error: string | undefined;
   onLogin: (identifier: string, password: string) => Promise<void> | void;
 }
 

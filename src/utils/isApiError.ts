@@ -5,8 +5,10 @@ export interface ApiErrorResponse {
         name: string;
         message: string;
         status: number;
+        details?: Record<string, string>;
       };
     };
+    status: number;
   };
 }
 

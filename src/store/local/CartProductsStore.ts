@@ -9,13 +9,15 @@ import {
 } from "mobx";
 import { RootStore } from "../global/RootStore.ts";
 import { ILocalStore, SingleProduct } from "types/types.ts";
+import { handleError } from "../../utils/handleError.ts";
+import { ApiError } from "../../types/error.ts";
 
 type PrivateFields = "_products" | "_loading" | "_error";
 
 export class CartProductsStore implements ILocalStore {
   private _products: SingleProduct[] = [];
   private _loading = false;
-  private _error: string | null = null;
+  private _error: ApiError | null = null;
   private _rootStore: RootStore;
   private readonly _reactionDisposer: IReactionDisposer;
 
@@ -80,7 +82,7 @@ export class CartProductsStore implements ILocalStore {
       });
     } catch (error) {
       runInAction(() => {
-        this._error = String(error);
+        this._error = handleError(error);
       });
     } finally {
       runInAction(() => {

@@ -31,7 +31,7 @@ export const Cart: React.FC = observer(() => {
     <PageTransition>
       <Navbar />
       <div className={style.container}>
-        {error && <div>{error}</div>}
+        {error && <div>{error.message}</div>}
         <div className={style.itemsContainer}>
           <div className={style.header}>
             <Text tag={"h1"}>Корзина</Text>
