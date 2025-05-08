@@ -72,66 +72,6 @@ export const HomePage: React.FC = observer(() => {
           </div>
           <PageAnimation direction={direction} currentPage={currentPage}>
             <ProductGrid productStore={store} />
-            {/*<div className={styles.cardContainer}>*/}
-            {/*  {loading &&*/}
-            {/*    Array.from({ length: 6 }, () => Math.random()).map(*/}
-            {/*      (skeleton) => (*/}
-            {/*        <CardSkeleton key={skeleton} className={styles.card} />*/}
-            {/*      ),*/}
-            {/*    )}*/}
-            {/*  {data &&*/}
-            {/*    !loading &&*/}
-            {/*    !error &&*/}
-            {/*    data.map((product) => (*/}
-            {/*      <div*/}
-            {/*        className={styles.navCardWrapper}*/}
-            {/*        key={product.id}*/}
-            {/*        id={`${product.documentId}`}*/}
-            {/*        onClick={handleSaveQuery}*/}
-            {/*      >*/}
-            {/*        <Card*/}
-            {/*          className={styles.card}*/}
-            {/*          captionSlot={product.title}*/}
-            {/*          image={product.images[0].url}*/}
-            {/*          subtitle={product.description}*/}
-            {/*          title={product.title}*/}
-            {/*          contentSlot={`$${product.price}`}*/}
-            {/*          actionSlot={*/}
-            {/*            isInCart(product.documentId) ? (*/}
-            {/*              <div className={styles.isInCartWrapper}>*/}
-            {/*                <Button*/}
-            {/*                  onClick={handleNavigateToCart}*/}
-            {/*                  className={styles.itemInCartButton}*/}
-            {/*                >*/}
-            {/*                  Move to Cart*/}
-            {/*                </Button>*/}
-            {/*                <Counter*/}
-            {/*                  value={getItemQuantityById(product.documentId)}*/}
-            {/*                  onChange={handleUpdateQuantity(*/}
-            {/*                    product.documentId,*/}
-            {/*                  )}*/}
-            {/*                  onRemove={handleRemoveFromCart(*/}
-            {/*                    product.documentId,*/}
-            {/*                  )}*/}
-            {/*                  removeIcon={trashIcon}*/}
-            {/*                  className={styles.counter}*/}
-            {/*                />*/}
-            {/*              </div>*/}
-            {/*            ) : (*/}
-            {/*              <Button onClick={handleAddToCart(product.documentId)}>*/}
-            {/*                Add to Cart*/}
-            {/*              </Button>*/}
-            {/*            )*/}
-            {/*          }*/}
-            {/*        />*/}
-            {/*        <NavLink*/}
-            {/*          to={`/products/${product.documentId}`}*/}
-            {/*          key={product.documentId}*/}
-            {/*          className={styles.productLink}*/}
-            {/*        />*/}
-            {/*      </div>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
           </PageAnimation>
           {error && <Text tag="h1">{error}</Text>}
           {data?.length === 0 && !loading && (

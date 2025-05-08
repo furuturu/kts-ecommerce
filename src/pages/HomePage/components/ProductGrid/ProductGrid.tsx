@@ -1,5 +1,5 @@
 import { ProductsStore } from "store/local/ProductsStore.ts";
-import styles from "../../HomePage.module.scss";
+import styles from "./ProductGrid.module.scss";
 import { CardSkeleton } from "components/CardSkeleton";
 import Card from "components/Card";
 import Button from "components/Button";

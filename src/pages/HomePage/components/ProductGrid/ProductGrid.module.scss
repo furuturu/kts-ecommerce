@@ -1,0 +1,54 @@
+@use "scss" as *;
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(360px, 1fr));
+  gap: 30px;
+  width: 100%;
+
+  @include desktop-m {
+    //grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(2, minmax(360px, 1fr));
+    gap: 20px;
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(1, minmax(360px, 1fr));
+    gap: 15px;
+  }
+
+  .card {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .isInCartWrapper {
+    display: flex;
+    gap: 10px;
+    margin-left: 5px;
+
+    .counter {
+      display: flex;
+      justify-content: space-evenly;
+      max-width: 150px;
+    }
+
+    .itemInCartButton {
+      background-color: #6eb595;
+    }
+  }
+
+  .navCardWrapper {
+    position: relative;
+  }
+
+  .productLink {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+  }
+}
