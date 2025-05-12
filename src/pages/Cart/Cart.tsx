@@ -48,9 +48,11 @@ export const Cart: React.FC = observer(() => {
               checked={isAllSelected}
               className={style.selectAllCheckbox}
             />
-            <Text tag={"span"} className={style.selectAllLabel}>
-              Выбрать все товары
-            </Text>
+            <div onClick={handleCheckBoxClick}>
+              <Text tag={"span"} className={style.selectAllLabel}>
+                Выбрать все товары
+              </Text>
+            </div>
             {isAllSelected && (
               <Button className={style.trash} onClick={handleClearCart}>
                 {trashIcon}
