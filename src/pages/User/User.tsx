@@ -10,13 +10,14 @@ import { PageTransition } from "../../components/PageTransition";
 
 export const User = observer(() => {
   const [userForm, setUserForm] = useState("login");
-  const { user } = authStore;
+  const { user, setErrorNull } = authStore;
   const handleToggleAuthForm = () => {
     if (userForm === "login") {
       setUserForm("register");
     } else {
       setUserForm("login");
     }
+    setErrorNull();
   };
   const isLoginForm = userForm === "login";
 
@@ -35,14 +36,14 @@ export const User = observer(() => {
         {isLoginForm ? (
           <Login
             loading={authStore.loading}
-            error={authStore.error}
+            error={authStore.error?.message}
             onLogin={authStore.login}
           />
         ) : (
           <Register
             onRegister={authStore.register}
             loading={authStore.loading}
-            error={authStore.error}
+            error={authStore.error?.message}
           />
         )}
         <button

@@ -6,7 +6,8 @@ import {
   runInAction,
 } from "mobx";
 import { strapiAuth } from "services/axios.ts";
-import { isApiErrorResponse } from "../../utils/isApiError.ts";
+import { handleError } from "utils/handleError.ts";
+import { ApiError } from "types/error.ts";
 
 interface User {
   id: number;
@@ -19,7 +20,7 @@ type PrivateFields = "_user" | "_loading" | "_error";
 class AuthStore {
   private _user: User | null = null;
   private _loading: boolean = false;
-  private _error: string | null = null;
+  private _error: ApiError | null = null;
   constructor() {
     makeObservable<AuthStore, PrivateFields>(this, {
       _user: observable,
@@ -35,6 +36,7 @@ class AuthStore {
       logout: action,
       fetchUserData: action,
       initializeAuth: action,
+      setErrorNull: action,
     });
     this._setupAxiosInterceptors();
     this.initializeAuth();
@@ -62,6 +64,10 @@ class AuthStore {
     return this._error;
   }
 
+  setErrorNull = () => {
+    this._error = null;
+  };
+
   initializeAuth = () => {
     const jwt = localStorage.getItem("jwt");
     if (jwt && !this._user) {
@@ -79,7 +85,7 @@ class AuthStore {
       });
     } catch (error) {
       runInAction(() => {
-        this._error = String(error);
+        this._error = handleError(error);
         this._loading = false;
       });
     }
@@ -102,13 +108,7 @@ class AuthStore {
       });
     } catch (error) {
       runInAction(() => {
-        if (isApiErrorResponse(error)) {
-          this._error =
-            error.response.data.error.message || "Ошибка при регистрации";
-        } else {
-          console.error("Что-то сломалось:", error);
-          this._error = "Что-то пошло не так";
-        }
+        this._error = handleError(error);
         this._loading = false;
       });
     }
@@ -129,13 +129,7 @@ class AuthStore {
       });
     } catch (error) {
       runInAction(() => {
-        if (isApiErrorResponse(error)) {
-          this._error =
-            error.response.data.error.message || "Ошибка при регистрации";
-        } else {
-          console.error("Что-то сломалось:", error);
-          this._error = "Что-то пошло не так";
-        }
+        this._error = handleError(error);
         this._loading = false;
       });
     }

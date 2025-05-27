@@ -1,7 +1,8 @@
 import { useLocation } from "react-router";
-import { rootStore } from "store/global/RootStore.ts";
+import { useRootStore } from "./store/useRootStore.ts";
 
 export const useQueryParamsStoreInit = (): void => {
+  const rootStore = useRootStore();
   const { search } = useLocation();
   rootStore.query.setURLQueryParameters(search);
 };

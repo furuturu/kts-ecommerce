@@ -7,6 +7,8 @@ import {
 } from "mobx";
 import { ILocalStore, StrapiProductsListResponse } from "types/types.ts";
 import { RootStore } from "../global/RootStore.ts";
+import { handleError } from "../../utils/handleError.ts";
+import { ApiError } from "../../types/error.ts";
 
 type PrivateFields =
   | "_data"
@@ -19,7 +21,7 @@ type PrivateFields =
 export class ProductsStore implements ILocalStore {
   private _data: StrapiProductsListResponse | null = null;
   private _loading = false;
-  private _error: string | null = null;
+  private _error: ApiError | null = null;
   private _currentPage = 1;
   private _searchQuery: string = "";
   private _selectedCategory: string = "";
@@ -60,8 +62,8 @@ export class ProductsStore implements ILocalStore {
     return this._loading;
   }
 
-  get error(): string | null {
-    return this._error;
+  get error(): string | undefined {
+    return this._error?.message;
   }
 
   get currentPage(): number {
@@ -96,7 +98,7 @@ export class ProductsStore implements ILocalStore {
       });
     } catch (error) {
       runInAction(() => {
-        this._error = String(error);
+        this._error = handleError(error);
       });
     } finally {
       runInAction(() => {

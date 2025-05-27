@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Pagination.module.scss";
-import { usePagination } from "hooks/usePagination.ts";
+import { usePagination } from "hooks/ui/usePagination.ts";
 import { ArrowIcon } from "components/icons/ArrowIcon";
 import cn from "classnames";
 

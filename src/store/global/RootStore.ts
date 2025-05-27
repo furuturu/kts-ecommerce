@@ -9,5 +9,3 @@ export class RootStore {
   readonly cart = new CartStore();
   readonly navigation = new Navigation();
 }
-
-export const rootStore = new RootStore();

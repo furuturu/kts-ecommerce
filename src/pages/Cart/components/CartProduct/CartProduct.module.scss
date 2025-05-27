@@ -1,4 +1,4 @@
-@use 'scss' as *;
+@use "scss" as *;
 
 .cartItem {
   display: grid;
@@ -68,16 +68,6 @@
       &:active {
         transform: scale(0.95);
         background-color: $brand-active;
-      }
-    }
-
-    .quantityRemoveButton {
-      background: url("assets/icons8-trash.svg");
-      background-size: cover;
-      border: none;
-      &:hover {
-        background: url("assets/icons8-trash.svg");
-        background-size: cover;
       }
     }
 

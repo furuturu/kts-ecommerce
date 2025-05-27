@@ -10,7 +10,9 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import { rootStore, RootStore } from "../global/RootStore.ts";
+import { RootStore } from "../global/RootStore.ts";
+import { ApiError } from "../../types/error.ts";
+import { handleError } from "../../utils/handleError.ts";
 
 type PrivateFields = "_categories" | "_images" | "_loading" | "_error";
 
@@ -18,7 +20,7 @@ export class CategoryStore implements ILocalStore {
   private _categories: ProductCategory[] = [];
   private _images: string[] = [];
   private _loading: boolean = false;
-  private _error: string | null = null;
+  private _error: ApiError | null = null;
   private _rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -50,8 +52,8 @@ export class CategoryStore implements ILocalStore {
     return this._loading;
   }
 
-  get error(): string | null {
-    return this._error;
+  get error(): string | undefined {
+    return this._error?.message;
   }
 
   getCategories = async () => {
@@ -66,7 +68,7 @@ export class CategoryStore implements ILocalStore {
       });
     } catch (error) {
       runInAction(() => {
-        this._error = String(error);
+        this._error = handleError(error);
       });
     } finally {
       runInAction(() => {
@@ -93,4 +95,5 @@ export class CategoryStore implements ILocalStore {
   };
 }
 
-export const createCategoriesStore = () => new CategoryStore(rootStore);
+export const createCategoriesStore = (rootStore: RootStore) =>
+  new CategoryStore(rootStore);

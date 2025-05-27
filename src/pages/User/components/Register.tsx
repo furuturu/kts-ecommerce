@@ -4,7 +4,7 @@ import styles from "../User.module.scss";
 
 interface RegisterProps {
   loading: boolean;
-  error: string | null;
+  error: string | undefined;
   onRegister: (
     username: string,
     email: string,

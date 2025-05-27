@@ -3,29 +3,32 @@ import { SingleProduct } from "types/types.ts";
 import Text from "components/Text";
 import Button from "components/Button";
 import { NavLink } from "react-router";
-import { rootStore } from "store/global/RootStore.ts";
 import { Counter } from "components/Counter/Counter.tsx";
 import { observer } from "mobx-react-lite";
+import { useCartStore } from "hooks/store/useCartStore.ts";
 
 interface Props {
   product: SingleProduct;
 }
 
 export const Details = observer(({ product }: Props) => {
-  const cart = rootStore?.cart;
+  const {
+    addItem,
+    checkIfProductIsInCart,
+    updateQuantity,
+    removeItem,
+    getItemQuantityById,
+  } = useCartStore();
   const handleAddToCart = () => {
-    cart?.addItem(product.documentId);
+    addItem(product.documentId);
   };
-  const isInCart = cart?.checkIfProductIsInCart(product.documentId);
+  const isInCart = checkIfProductIsInCart(product.documentId);
 
-  const handleUpdateQuantity = (quantity: number) => {
-    return cart?.updateQuantity(product.documentId, quantity);
-  };
-  const handleRemoveFromCart = () => {
-    cart?.removeItem(product.documentId);
-  };
+  const handleUpdateQuantity = (quantity: number) =>
+    updateQuantity(product.documentId, quantity);
+  const handleRemoveFromCart = () => removeItem(product.documentId);
 
-  const inputValue = cart?.getItemQuantityById(product.documentId);
+  const inputValue = getItemQuantityById(product.documentId);
 
   return (
     <div className={styles.container}>

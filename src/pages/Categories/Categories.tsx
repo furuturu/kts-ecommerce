@@ -1,6 +1,4 @@
 import React, { useEffect } from "react";
-import { useLocalStore } from "hooks/useLocalStore.ts";
-import { createCategoriesStore } from "store/local/CategoryStore.ts";
 import { ProductCategory } from "types/types.ts";
 import { observer } from "mobx-react-lite";
 import { Navbar } from "components/Navbar";
@@ -10,14 +8,14 @@ import Card from "components/Card";
 import Loader from "components/Loader";
 import { AnimatePresence, motion } from "framer-motion";
 import { PageTransition } from "components/PageTransition";
+import { useCategoryStore } from "../../hooks/store/useCategoryStore.ts";
 
 export const Categories: React.FC = observer(() => {
-  const categoriesStore = useLocalStore(createCategoriesStore);
+  const { categories, loading, error, getCategories } = useCategoryStore();
   useEffect(() => {
-    categoriesStore.getCategories();
-  }, [categoriesStore]);
+    getCategories();
+  }, [getCategories]);
 
-  const { categories, loading, error } = categoriesStore;
   return (
     <PageTransition>
       <Navbar />
@@ -55,18 +53,18 @@ export const Categories: React.FC = observer(() => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1 }}
+                  className={style.navCard}
                 >
                   <Card
                     image={category.image.url}
                     title={category.title}
                     subtitle={""}
                     className={style.category}
-                  >
-                    <NavLink
-                      to={`/?category=${category.id}`}
-                      className={style.categoryLink}
-                    />
-                  </Card>
+                  />
+                  <NavLink
+                    to={`/?category=${category.id}`}
+                    className={style.categoryLink}
+                  />
                 </motion.div>
               ))}
             </motion.div>

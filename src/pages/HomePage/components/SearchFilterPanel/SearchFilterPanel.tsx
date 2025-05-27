@@ -4,20 +4,20 @@ import styles from "./SearchFilterPanel.module.scss";
 import Button from "components/Button";
 import MultiDropdown, { Option } from "components/MultiDropdown";
 import { observer } from "mobx-react-lite";
-import { CategoryStore } from "store/local/CategoryStore.ts";
 import { ProductsStore } from "store/local/ProductsStore.ts";
 import { ClearIcon } from "components/icons/ClearIcon/ClearIcon.tsx";
+import { useCategoryStore } from "hooks/store/useCategoryStore.ts";
 
 interface SearchFilterPanelProps {
-  categoriesStore: CategoryStore;
   productsStore: ProductsStore;
 }
 
 export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
-  ({ categoriesStore, productsStore }) => {
+  ({ productsStore }) => {
+    const { getCategories, categoryOptions } = useCategoryStore();
     useEffect(() => {
-      categoriesStore.getCategories();
-    }, [categoriesStore]);
+      getCategories();
+    }, [getCategories]);
 
     const { searchQuery } = productsStore;
 
@@ -50,10 +50,7 @@ export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
       [productsStore],
     );
 
-    const categoryOptions = useMemo(
-      () => categoriesStore.categoryOptions,
-      [categoriesStore.categoryOptions],
-    );
+    const categoriesOptions = useMemo(() => categoryOptions, [categoryOptions]);
 
     const selectedCategoryOption = useMemo(() => {
       return productsStore.selectedCategory
@@ -85,7 +82,7 @@ export const SearchFilterPanel: React.FC<SearchFilterPanelProps> = observer(
         <MultiDropdown
           getTitle={getDropdownTitle}
           onChange={handleCategoryChange}
-          options={categoryOptions}
+          options={categoriesOptions}
           value={selectedCategoryOption ? [selectedCategoryOption] : []}
         ></MultiDropdown>
       </div>
