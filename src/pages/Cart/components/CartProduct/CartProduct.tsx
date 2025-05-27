@@ -23,6 +23,10 @@ export const CartProduct: React.FC<CartProductProps> = observer(
     const id = product.documentId;
     const quantity = getItemQuantityById(id);
 
+    if (quantity === 0) {
+      return null;
+    }
+
     const handleCheckBoxClick = () => toggleItemSelection(id);
 
     const isSelected = isProductSelected(id);
